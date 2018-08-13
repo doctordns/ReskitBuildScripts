@@ -22,6 +22,7 @@ Depending on the version of Windows Server in use (and what license keys you may
 ## Steps
 
 1. Create a reference disk
+Use New-ReferenceVHDX.ps1
 
 2. Create DC1 VM
 

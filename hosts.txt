@@ -1,0 +1,41 @@
+# Hosts File for host
+# contains addreses for the vm farm
+
+10.0.0.10        DC1              
+10.0.0.10        DC1.Reskit.Org  
+10.0.0.10        WWW.reskit.Org
+10.0.0.10        DNS.Reskit.Org
+
+10.0.0.11        DC2
+10.0.0.11        DC2.Reskit.Org 
+10.0.0.11        WWW.reskit.Org 
+10.0.0.11        DNS.Reskit.Org 
+  
+10.0.0.20        SQL1        
+10.0.0.20        SQL1.Reskit.Org
+
+10.0.0.21        SQL2012        
+10.0.0.21        SQL2012.Reskit.Org
+
+10.0.0.25        Exch2013
+10.0.0.25        EXCH1.Reskit.Org
+
+10.0.0.26        Lync2013
+10.0.0.26        Lync2013.Reskit.Org
+
+10.0.0.30        SRV1             
+10.0.0.30        SRV1.Reskit.Org  
+
+10.0.0.31        SRV2
+10.0.0.31        SRV2.Reskit.Org
+
+10.0.0.51        DHCP1
+10.0.0.51        DHCP1.Reskit.Org 
+10.0.0.52        DHCP2            
+10.0.0.52        DHCP2.Reskit.Org 
+
+# IP address for the host
+10.0.0.253       VMHost            
+10.0.0.253       VMHost.Reskit.Org
+10.0.0.253       Home
+10.0.0.253       Home.Reskit.Org   
