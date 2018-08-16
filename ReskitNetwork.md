@@ -53,6 +53,6 @@ Suitably updated - this is nearly a hosts file for the HV host.
 ## IP address for the host
 
 ```powershell
-# Assign nice names for host
-10.0.0.253       Home.Reskit.Org  
+# Assign nice name for host
+10.10.10.252       Home.Reskit.Org  
 ```
