@@ -1,10 +1,11 @@
 # Reskit Network Topolog
 
 This file contains the details of the Reskit Network
-Suitably ammended - this is nearly a hosts file for the HV host.
+Suitably updated - this is nearly a hosts file for the HV host.
 
 ## Core Servers
 
+``` powershell
 10.10.10.10      DC1.Reskit.Org  
 10.10.10.11      DC2.Reskit.Org  
 10.10.10.20      RootCA.Reskit.Org  
@@ -13,7 +14,7 @@ Suitably ammended - this is nearly a hosts file for the HV host.
 
 10.10.10.50      SRV1.Reskit.Org  
 10.10.10.51      SRV2.Reskit.Org  
-
+```
 ## File Servers
 
 ### Cluster address
