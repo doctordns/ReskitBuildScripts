@@ -6,18 +6,23 @@ Suitably updated - this is nearly a hosts file for the HV host.
 ## Core Servers
 
 ``` powershell
+# Domain Controllers
 10.10.10.10      DC1.Reskit.Org  
 10.10.10.11      DC2.Reskit.Org  
+
+# Certificate servers
 10.10.10.20      RootCA.Reskit.Org  
 10.10.10.21      CA.Reskit.Org
 
+# General Purpose servers
 10.10.10.50      SRV1.Reskit.Org  
 10.10.10.51      SRV2.Reskit.Org  
 ```
+
 ## File Servers
 
 ```powershell
-# Cluster address
+# Scale-Out Fle server Cluster address
 10.10.10.100     FS.Reskit.Org   # Cluster  address  
 
 # Individual nodes
@@ -31,9 +36,9 @@ Suitably updated - this is nearly a hosts file for the HV host.
 ## Hyper-V nodes
 
 ```powershell
-# Cluster address
+# Hyper-V Cluster address
 10.10.10.200     HV.Reskit.Org
-# Individual nodes
+# Individual Hyper-V nodes
 10.10.10.201     HV1.Reskit.Org  
 10.10.10.202     HV2.Reskit.Org  
 ```
@@ -41,11 +46,13 @@ Suitably updated - this is nearly a hosts file for the HV host.
 ## Windows Systems Update Services (WSUS)
 
 ```powershell
+# WSUS server
 10.10.10.240     WSUS1.Reskit.Org
 ```
 
 ## IP address for the host
 
 ```powershell
+# Assign nice names for host
 10.0.0.253       Home.Reskit.Org  
 ```
