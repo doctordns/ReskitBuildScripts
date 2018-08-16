@@ -21,17 +21,35 @@ Depending on the version of Windows Server in use (and what license keys you may
 
 ## Steps
 
-1. Create a reference disk
-Use New-ReferenceVHDX.ps1
+1. Setup Environment
 
-2. Create DC1 VM
 
-3. Configure DC1 (and your host!)
+On the VM host, create a d:\V6 as the location for the VMs.
+Then copy the two unattended XML files \unattended XML\Unattend.xml and \unattended XML\UnAttend.DJ.xml into d:\v6 on the VM host.
 
-4. Create SRV1, SRV2
+2. Create a reference disk
 
-5. Configure SRV1
+Use New-ReferenceVHDX.ps1 - ensure paths are correct to the ISO and output vhdx.
+Do not proceed until the reference disk is created
 
-6. Configure SRV2
+3. Create DC1 VM
 
-7. Create other VMs as needed - with configuration being done by recipes.
+Use New-RKVM. This script has a function that creates a VM and some calls to that function.
+First, comment out all the calls to ensure the function compiles.
+Then uncomment the relevant calls and create VMs. 
+Create DC1 VM first, and get if fully configured.
+Then come back and create more.
+
+
+4. Configure DC1 (and your host!)
+Run Configure-DC1-1 to create DC1 system as a DC in the Reskit.Org domain.
+This script also sets up the host to do CredSSP into DC1.
+
+4. Create SRV1, SRV25
+
+6. Configure SRV1
+
+
+7. Configure SRV2
+
+8. Create other VMs as needed - with configuration being done by recipes.

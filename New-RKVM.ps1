@@ -4,125 +4,129 @@
 # Version 1.0.1 - Added VHDSize to create-vm function
 # Version 1.0.2 - Added more VMs to create (for Packt book etc)
 # Version 1.0.3 - updated for Server 2019
+                - added 2nd NIC, and moved where disks are stored
 
 
 # First define the create-VM Function
 
-Function Create-VM {
-#===================================================
-# Create a New VM
-#===================================================
+Function New-RKVM {
+    #===================================================
+    # Create a New VM
+    #===================================================
 
-# Parameters are Name, Virtual Machine Path, path to reference vhdx, network switch to use,
-# VM Memory, Unattend file, IP address and DNS Server to set
+    # Parameters are Name, Virtual Machine Path, path to reference vhdx, network switch to use,
+    # VM Memory, Unattend file, IP address and DNS Server to set
 
 
-[Cmdletbinding()]
-Param ( 
- $Name         = "DC1",
- $VmPath       = "d:\v8",
- $ReferenceVHD = "C:\v6\Ref2019.vhdx",
- $Network      = "Internal",
- [int64] $VMMemory     = 1024mb,
- $UnattendXML  = "C:\v6\unattend.xml",
- $IPAddr       = '10.10.10.10/24',
- $DnsSvr       = '10.10.10.10'
-)
+    [Cmdletbinding()]
+    Param ( 
+        $Name = "DC1",
+        $VmPath = "d:\v6",
+        $ReferenceVHD = "C:\v6\Ref2019.vhdx",
+        $Network = "Internal",
+        [int64] $VMMemory = 1024mb,
+        $UnattendXML = "C:\v6\unattend.xml",
+        $IPAddr = '10.10.10.10/24',
+        $DnsSvr = '10.10.10.10'
+    )
 
-$Starttime = Get-Date
-Write-Verbose -Message "Starting Create-VM at: $Starttime"
-Write-verbose "Creating VM          : [$Name]"
-Write-verbose "Path to VM           : [$VMpath]"
+    $Starttime = Get-Date
+    Write-Verbose -Message "Starting Create-VM at: $Starttime"
+    Write-verbose "Creating VM          : [$Name]"
+    Write-verbose "Path to VM           : [$VMpath]"
 
-# Check to see if Switch exists (passed in $Network variable)
-If (Get-VMSwitch $Network) {Write-Verbose "VM Switch $Network Exists"} else {
- Write-Verbose "VM Switch $network does not exist -creating!"
- New-VMSwitch -Name Internal -SwitchType Internal
- Write-Verbose "Switch $Network created"
-}
+    # Check to see if Switch exists (passed in $Network variable)
+    If (Get-VMSwitch $Network) {Write-Verbose "VM Switch $Network Exists"} else {
+        Write-Verbose "VM Switch $network does not exist -creating!"
+        New-VMSwitch -Name Internal -SwitchType Internal
+        Write-Verbose "Switch $Network created"
+    }
 
-#    Set path to differencing disk location
-$Path = "$vmpath\$name.vhdx"
-Write-Verbose "Creating Disk at [$Path]"
+    #    Set path to differencing disk location
+    $Path = "$vmpath\$name\$name.vhdx"
+    Write-Verbose "Creating Disk at [$Path]"
 
-#    Add a new differencing VHDX, Based on parent
-$vmDisk01 = New-VHD –Path $Path -Differencing –ParentPath $ReferenceVHD -ErrorAction Stop
-Write-Verbose "Added VM Disk [$($VMdisk01.Path)], pointing to [$ReferenceVHD]"
+    #    Add a new differencing VHDX, Based on parent
+    $vmDisk01 = New-VHD –Path $Path -Differencing –ParentPath $ReferenceVHD -ErrorAction Stop
+    Write-Verbose "Added VM Disk [$($VMdisk01.Path)], pointing to [$ReferenceVHD]"
 
-#    Create a New VM
-$VM = New-VM –Name $Name –MemoryStartupBytes $VMMemory –VHDPath $VMDisk01.path -SwitchName $Network -Path $vmPath 
-Write-Verbose "VM [$Name] created"
+    #    Create a New VM
+    $VM = New-VM –Name $Name –MemoryStartupBytes $VMMemory –VHDPath $VMDisk01.path -SwitchName $Network -Path $vmPath 
+    Write-Verbose "VM [$Name] created"
 
-# Mount the Disk on the local machine
-Mount-DiskImage -ImagePath $path
-$VHDDisk = Get-DiskImage -ImagePath $path | Get-Disk
-$VHDPart = Get-Partition -DiskNumber $VHDDisk.Number
-$VHDVolumeName = [string]$VHDPart.DriveLetter
-$VHDVolume = [string]$VHDPart.DriveLetter + ":"
-Write-verbose "Volume [$VHDVolumename] created in VM [$name]"
+    # Mount the Disk on the local machine
+    Mount-DiskImage -ImagePath $path
+    $VHDDisk = Get-DiskImage -ImagePath $path | Get-Disk
+    $VHDPart = Get-Partition -DiskNumber $VHDDisk.Number
+    $VHDVolumeName = [string]$VHDPart.DriveLetter
+    $VHDVolume = [string]$VHDPart.DriveLetter + ":"
+    Write-verbose "Volume [$VHDVolumename] created in VM [$name]"
 
-#    Get Unattended.XML file
-Write-Verbose "Using Unattended XML file [$unattendXML]"
+    #    Get Unattended.XML file
+    Write-Verbose "Using Unattended XML file [$unattendXML]"
 
-#    Open XML file
-$xml = [xml](get-content $UnattendXML)
+    #    Open XML file
+    $xml = [xml](get-content $UnattendXML)
 
-#    Change ComputerName
-Write-Verbose "Setting VM ComputerName to: [$name]"
-$xml.unattend.settings.component | Where-Object { $_.Name -eq "Microsoft-Windows-Shell-Setup" } |
- ForEach-Object {
-   if($_.ComputerName) {
-     $_.ComputerName = $name
-   }
- }
+    #    Change ComputerName
+    Write-Verbose "Setting VM ComputerName to: [$name]"
+    $xml.unattend.settings.component | Where-Object { $_.Name -eq "Microsoft-Windows-Shell-Setup" } |
+        ForEach-Object {
+        if ($_.ComputerName) {
+            $_.ComputerName = $name
+        }
+    }
 
-#    Change IP address
-Write-Verbose "Setting VM ComputerName to: [$name]"
-$xml.unattend.settings.component | Where-Object { $_.Name -eq "Microsoft-Windows-TCPIP" } |
-  ForEach-Object {
+    #    Change IP address
+    Write-Verbose "Setting VM ComputerName to: [$name]"
+    $xml.unattend.settings.component | Where-Object { $_.Name -eq "Microsoft-Windows-TCPIP" } |
+        ForEach-Object {
 
-    if($_.Interfaces) {
-      $ht='#text'
-      $_.interfaces.interface.unicastIPaddresses.ipaddress.$ht = $IPAddr
-  }
-}
+        if ($_.Interfaces) {
+            $ht = '#text'
+            $_.interfaces.interface.unicastIPaddresses.ipaddress.$ht = $IPAddr
+        }
+    }
 
-#    Change DNS Server address
-Write-Verbose "Setting VM DNS address to: [$DNSSvr]"
-$xml.unattend.settings.component | Where-Object { $_.Name -eq "Microsoft-Windows-DNS-Client" } |
-  ForEach-Object {
-      if($_.Interfaces) {
-      $ht='#text'
-      $_.interfaces.interface.DNSServerSearchOrder.ipaddress.$ht = $DNSSvr
-  }
-}
+    #    Change DNS Server address
+    Write-Verbose "Setting VM DNS address to: [$DNSSvr]"
+    $xml.unattend.settings.component | Where-Object { $_.Name -eq "Microsoft-Windows-DNS-Client" } |
+        ForEach-Object {
+        if ($_.Interfaces) {
+            $ht = '#text'
+            $_.interfaces.interface.DNSServerSearchOrder.ipaddress.$ht = $DNSSvr
+        }
+    }
 
-#    Save XML File on Mounted VHDX file
-$xml.Save("$VHDVolume\Unattend.XML")
-Write-Verbose "Unattended XML file saved to vhd [$vhdvolume\unattend.xml]"
+    #    Save XML File on Mounted VHDX file
+    $xml.Save("$VHDVolume\Unattend.XML")
+    Write-Verbose "Unattended XML file saved to vhd [$vhdvolume\unattend.xml]"
 
-#    Dismount VHDX 
-Write-Verbose "Dismounting disk image: [$Path]"
-Dismount-DiskImage -ImagePath $path
+    #    Dismount VHDX 
+    Write-Verbose "Dismounting disk image: [$Path]"
+    Dismount-DiskImage -ImagePath $path
 
-#    Update additional Settings
-Write-Verbose 'Setting additional VM settings'
-Set-VM -Name $name -DynamicMemory
-Set-VM -Name $name -MemoryMinimumBytes $VMMemory
-Set-VM -Name $name -AutomaticStartAction Nothing
-Set-Vm -Name $name -AutomaticStopAction ShutDown
+    #    Update additional Settings
+    Write-Verbose 'Setting additional VM settings'
+    Set-VM -Name $name -DynamicMemory
+    Set-VM -Name $name -MemoryMinimumBytes $VMMemory
+    Set-VM -Name $name -AutomaticStartAction Nothing
+    Set-Vm -Name $name -AutomaticStopAction ShutDown
 
-#    Show what has been created!
-"VM Created:"
-Get-VM -Name $name | Format-List *
+    #  Add 2nd nic attached to External Switch
+    Add-VMNetworkAdapter -VMName $name -SwitchName External
 
-#    Start VM
-Write-verbose "VM [$Name] being started"
-Start-VM -Name $name
+    #    Show what has been created!
+    "VM Created:"
+    Get-VM -Name $name | Format-List *
 
-#    Now work out and write how long it took to create the VM
-$Finishtime = Get-Date
-Write-Verbose ("Creating VM ($name) took {0} seconds" -f ($FinishTime - $Starttime).totalseconds)
+    #    Start VM
+    Write-verbose "VM [$Name] being started"
+    Start-VM -Name $name
+
+    #    Now work out and write how long it took to create the VM
+    $Finishtime = Get-Date
+    Write-Verbose ("Creating VM ($name) took {0} seconds" -f ($FinishTime - $Starttime).totalseconds)
 }  # End of Create-VM function
 
 
@@ -132,7 +136,7 @@ Write-Verbose ("Creating VM ($name) took {0} seconds" -f ($FinishTime - $Startti
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS     #
 
 # Location of Server 2012 DVD Iso Image
-$Iso   = 'd:\builds\Windows_InsiderPreview_LTSC_Server_17723.iso'
+$Iso   = 'd:\builds\Windows_InsiderPreview_Server_vNext_en-us_17733.iso'
 
 # Where we put the reference VHDX
 # Be careful here - make sure this is the file you just created in Create-ReferenceVHDX
@@ -172,47 +176,46 @@ $Start = Get-Date
 #
 #    Create the DC - NON-domained joined
 
-# Create-VM -name "DC1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
-
+ New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
 
 #    Remaining VMs use the domain-join version of unattend.xml
 #
 
 #    Create a second DC for reskit.org for advanced class
-# Create-VM -name "DC2"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 756mb
+# New-RKVM -name "DC2"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 756mb
 
 # CA Servers
-# Create-VM -name "ROOT"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.21/24' -DNSSvr 10.10.10.10  -VMMemory 1gb 
-# Create-VM -name "CA"    -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.21/24' -DNSSvr 10.10.10.10  -VMMemory 1gb 
+# New-RKVM -name "ROOT"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.21/24' -DNSSvr 10.10.10.10  -VMMemory 1gb 
+# New-RKVM -name "CA"    -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.21/24' -DNSSvr 10.10.10.10  -VMMemory 1gb 
 
 # General Servers
-Create-VM -name "SRV1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.50/24' -DNSSvr 10.10.10.10  -VMMemory 1GB
-Create-VM -name "SRV2"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.51/24' -DNSSvr 10.10.10.10  -VMMemory 1GB
+#New-RKVM -name "SRV1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.50/24' -DNSSvr 10.10.10.10  -VMMemory 1GB
+#New-RKVM -name "SRV2"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.51/24' -DNSSvr 10.10.10.10  -VMMemory 1GB
 
 
 #    FS1, FS1 - file servers for which to cluster
-# Create-VM -name "FS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.101/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
-# Create-VM -name "FS2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.102/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
+# New-RKVM -name "FS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.101/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
+# New-RKVM -name "FS2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.102/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
 
 #    HV1, HV2 - Hyper-V Servers
-# Create-VM -name "HV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.201/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
-# Create-VM -name "HV2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.202/24' -DNSSvr 10.10.10.10 -VMMemory 2gb
+# New-RKVM -name "HV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.201/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
+# New-RKVM -name "HV2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.202/24' -DNSSvr 10.10.10.10 -VMMemory 2gb
 
 # WSUS1 WSUS Server
-# Create-VM -name "WSUS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.251/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
+# New-RKVM -name "WSUS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.251/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
 
 # Print Server
-# Create-VM -name "PSRV" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.60/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
+# New-RKVMM -name "PSRV" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.60/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
  
 # Default Gateway 
-# Create-VM -name "DG" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.254/24' -DNSSvr 10.10.10.10 -VMMemory 1024mb
+# New-RKVM -name "DG" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.254/24' -DNSSvr 10.10.10.10 -VMMemory 1024mb
 
 # NLB servers
-# Create-VM -name "NLB1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.53/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
-# Create-VM -name "NLB2"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.54/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
+# New-RKVM -name "NLB1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.53/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
+# New-RKVM -name "NLB2"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.54/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
 
 #  WSUS Server
-# Create-VM -name "WSUS1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.251/24' -DNSSvr 10.10.10.10  -VMMemory 3gb
+# New-RKVM -name "WSUS1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.251/24' -DNSSvr 10.10.10.10  -VMMemory 3gb
 
 
 #######################################################################################################

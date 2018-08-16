@@ -9,7 +9,8 @@
 # Version 1.1.1 21 Feb
 #   changed disk size on Reference disk to 128gb.
 # Version 1.2 Updated for Server 2016
-# Version 1.3 - Updated for Server 2019
+# Version 1.3 - Updated for Server 2019 and rename file and function.
+#             - Iso updated to 17733
 
 
 # Define a function to create a reference VHDX. 
@@ -116,7 +117,7 @@ Write-verbose  "Creating base image took [$($TT.totalminutes.tostring('n2'))] mi
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS              #
 
 #    Path to Server 2016 DVD                                                                                      
- $ISO          = 'D:\builds\Windows_InsiderPreview_LTSC_Server_17723.iso'
+ $ISO          = 'd:\BUILDS\Windows_InsiderPreview_Server_vNext_en-us_17733.iso'
 
 #    PathTo the reference VDHX is to go     
  $RefVhdxPath  = 'D:\v6\Ref2019.vhdx'
