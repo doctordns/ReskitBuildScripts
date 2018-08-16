@@ -4,7 +4,7 @@
 # Version 1.0.1 - Added VHDSize to create-vm function
 # Version 1.0.2 - Added more VMs to create (for Packt book etc)
 # Version 1.0.3 - updated for Server 2019
-                - added 2nd NIC, and moved where disks are stored
+#               - added 2nd NIC, and moved where disks are stored
 
 
 # First define the create-VM Function
@@ -176,7 +176,7 @@ $Start = Get-Date
 #
 #    Create the DC - NON-domained joined
 
- New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
+# New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
 
 #    Remaining VMs use the domain-join version of unattend.xml
 #
@@ -189,8 +189,8 @@ $Start = Get-Date
 # New-RKVM -name "CA"    -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.21/24' -DNSSvr 10.10.10.10  -VMMemory 1gb 
 
 # General Servers
-#New-RKVM -name "SRV1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.50/24' -DNSSvr 10.10.10.10  -VMMemory 1GB
-#New-RKVM -name "SRV2"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.51/24' -DNSSvr 10.10.10.10  -VMMemory 1GB
+New-RKVM -name "SRV1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.50/24' -DNSSvr 10.10.10.10  -VMMemory 1GB
+New-RKVM -name "SRV2"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.51/24' -DNSSvr 10.10.10.10  -VMMemory 1GB
 
 
 #    FS1, FS1 - file servers for which to cluster
@@ -206,16 +206,12 @@ $Start = Get-Date
 
 # Print Server
 # New-RKVMM -name "PSRV" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.60/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
- 
-# Default Gateway 
-# New-RKVM -name "DG" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.254/24' -DNSSvr 10.10.10.10 -VMMemory 1024mb
+
 
 # NLB servers
 # New-RKVM -name "NLB1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.53/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
 # New-RKVM -name "NLB2"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.54/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
 
-#  WSUS Server
-# New-RKVM -name "WSUS1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.251/24' -DNSSvr 10.10.10.10  -VMMemory 3gb
 
 
 #######################################################################################################

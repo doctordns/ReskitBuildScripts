@@ -55,14 +55,11 @@ powercfg /change monitor-timeout-ac 0
 #    Install key Windows features for labs
 Write-Verbose 'Installing key features for labs'
 Import-Module ServerManager
-Write-Verbose 'Installing Windows features needed for DC1'
+Write-Verbose 'Installing minimal Windows features needed for DC1'
 Import-Module ServerManager -verbose:$false -EA 0
-$Features = @('Hyper-V-PowerShell', 'Hyper-V-Tools','Rsat-AD-PowerShell',              
-              'Web-Server','Web-Mgmt-Tools','Web-Mgmt-Console',
-              'Web-Scripting-Tools', 'Telnet-Client')
+$Features = @('Rsat-AD-PowerShell' )
 Install-WindowsFeature $Features -IncludeManagementTools -Verbose
-Write-Verbose 'Installed Windows features needed for DC1'
-
+Write-Verbose 'Installed minimal Windows features needed for DC1'
 
 #    Install and configure DHCP
 Write-Verbose -Message 'Adding and then configuring DHCP'
@@ -110,9 +107,6 @@ Add-ADPrincipalGroupMembership -Identity "CN=tfl,CN=Users,DC=reskit,DC=org" `
 # Fix Admin too!
 Set-ADUser Administrator -PasswordNeverExpires $True
 
-# and before leaving - add desktop experience
-Install-WindowsFeature Desktop-Experience
-
 #     Say nice things and finish
 $FinishTime = Get-Date
 Write-Verbose "Finished at: $FinishTime"
@@ -132,14 +126,16 @@ $CredRK     = New-Object -Typename System.Management.Automation.PSCredential -Ar
 
 #    Following code used to test the credentials. Remove the comments on next two lines the first time you 
 #    run this script
-Invoke-Command -ComputerName DC1 -ScriptBlock {ipconfig;hostname} -Credential $Credrk -verbose
+Invoke-Command -ComputerName DC1.reskit.org -ScriptBlock {ipconfig;hostname} -Credential $Credrk -verbose
 Pause
 
+# now run the script to finish configuring dc1
 Invoke-Command -ComputerName DC1 -Scriptblock $conf -Credential $CredRK -verbose
+Write-Verbose 'Configuration complete, rebooting'
 
-Write-Verbose 'Configuration complete, rebooting, then taking the snapshot'
 #     OK - script block has completed - reboot the system and wait till it comes up
-Restart-Computer -ComputerName DC1  -Wait -For PowerShell -Force -Credential $CredRK
+Write-Verbose 'Restarting'
+Restart-Computer -ComputerName DC1.reskit.org  -Wait -For PowerShell -Force -Credential $CredRK
  
 #    Finally, run a post-DCPromo snapshot
 # Checkpoint-VM -VM $(Get-VM DC1) -SnapshotName "DC1 - post configuration by Configure-DC1-2.ps1" 

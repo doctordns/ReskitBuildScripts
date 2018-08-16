@@ -1,41 +1,45 @@
 # Hosts File for host
 # contains addreses for the vm farm
 
-10.0.0.10        DC1              
-10.0.0.10        DC1.Reskit.Org  
-10.0.0.10        WWW.reskit.Org
-10.0.0.10        DNS.Reskit.Org
+10.10.10.10        DC1              
+10.10.10.10        DC1.Reskit.Org  
 
-10.0.0.11        DC2
-10.0.0.11        DC2.Reskit.Org 
-10.0.0.11        WWW.reskit.Org 
-10.0.0.11        DNS.Reskit.Org 
-  
-10.0.0.20        SQL1        
-10.0.0.20        SQL1.Reskit.Org
+10.10.10.11        DC2
+10.10.10.11        DC2.Reskit.Org 
 
-10.0.0.21        SQL2012        
-10.0.0.21        SQL2012.Reskit.Org
+10.10.10.20      RootCA
+10.10.10.20      RootCA.Reskit.Org
 
-10.0.0.25        Exch2013
-10.0.0.25        EXCH1.Reskit.Org
+10.10.10.21      RootCA
+10.10.10.21      RootCA.Reskit.Org
 
-10.0.0.26        Lync2013
-10.0.0.26        Lync2013.Reskit.Org
+10.10.10.50        SRV1             
+10.10.10.50        SRV1.Reskit.Org  
 
-10.0.0.30        SRV1             
-10.0.0.30        SRV1.Reskit.Org  
+10.10.10.51        SRV2
+10.10.10.51        SRV2.Reskit.Org
 
-10.0.0.31        SRV2
-10.0.0.31        SRV2.Reskit.Org
-
-10.0.0.51        DHCP1
-10.0.0.51        DHCP1.Reskit.Org 
-10.0.0.52        DHCP2            
-10.0.0.52        DHCP2.Reskit.Org 
+#  Cluster IP address
+10.10.10.100     FS
+10.10.10.100     FS.Reskit.Org
+# Individual nodes
+10.10.10.101     FS1
+10.10.10.101     FS1.Reskit.Org
+10.10.10.102     FS2
+10.10.10.102     FS2.Reskit.Org
+# Storage Server (iSCSI target)
+10.10.10.110     SSRV
+10.10.10.110     SSRV.Reskit.Org
+# Hyper-V nodes
+10.10.10.200     HV  # Clustered address
+10.10.10.201     HV1
+10.10.10.201     HV1.Reskit.Org
+10.10.10.202     HV2
+10.10.10.202     HV2.Reskit.Org
+# WSUS
+10.10.10.240     WSUS1
+10.10.10.240     WSUS1.Reskit.Org
 
 # IP address for the host
-10.0.0.253       VMHost            
-10.0.0.253       VMHost.Reskit.Org
 10.0.0.253       Home
 10.0.0.253       Home.Reskit.Org   
