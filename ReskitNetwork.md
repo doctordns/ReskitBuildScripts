@@ -1,4 +1,4 @@
-# Reskit Network Topolog
+# Reskit Network Topology
 
 This file contains the details of the Reskit Network
 Suitably updated - this is nearly a hosts file for the HV host.
