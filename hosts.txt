@@ -1,11 +1,11 @@
 # Hosts File for host
 # contains addreses for the vm farm
 
-10.10.10.10        DC1              
-10.10.10.10        DC1.Reskit.Org  
+10.10.10.10      DC1              
+10.10.10.10      DC1.Reskit.Org  
 
-10.10.10.11        DC2
-10.10.10.11        DC2.Reskit.Org 
+10.10.10.11      DC2
+10.10.10.11      DC2.Reskit.Org 
 
 10.10.10.20      RootCA
 10.10.10.20      RootCA.Reskit.Org
@@ -13,11 +13,11 @@
 10.10.10.21      RootCA
 10.10.10.21      RootCA.Reskit.Org
 
-10.10.10.50        SRV1             
-10.10.10.50        SRV1.Reskit.Org  
+10.10.10.50      SRV1             
+10.10.10.50      SRV1.Reskit.Org  
 
-10.10.10.51        SRV2
-10.10.10.51        SRV2.Reskit.Org
+10.10.10.51      SRV2
+10.10.10.51      SRV2.Reskit.Org
 
 #  Cluster IP address
 10.10.10.100     FS
