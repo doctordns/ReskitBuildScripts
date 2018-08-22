@@ -34,16 +34,14 @@ Write-Verbose -message " Autoadmin logon for $dom\$user set"
 Write-Verbose -Message ' Setting Monitor poweroff to zero'
 Powercfg /change monitor-timeout-ac 0
 
-#    Install Windows features for labs
+# Here we used to install minimal Windows features
+# Add Web server and management tools/console
+<# removed since book scripts are going to add all this stuff.
 Write-Verbose ' Installing key Windows features for labs'
-$Features = @('PowerShell-ISE','Rsat-AD-PowerShell','Hyper-V-PowerShell',
-              'Web-Server','Web-Mgmt-Tools','Web-Mgmt-Console',
+$Features = @('Web-Server','Web-Mgmt-Tools','Web-Mgmt-Console',
               'Web-Scripting-Tools')
 Install-WindowsFeature $Features -IncludeManagementTools 
-
-#    Install ALL the RSAT tools
-Write-Verbose ' Installing ALL RSAT tools'
-Get-WindowsFeature *rsat* | Install-WindowsFeature  -verbose | Out-Null
+#>
 
 #     Next, enable CredSSP on Srv1
 Write-Verbose ' Enabling CredSSP'
@@ -62,11 +60,6 @@ Write-Host "Configuring SRV1 took $(($FinishTime - $StartTime).totalseconds.tost
 
 $conf2 = {
 $VerbosePreference = 'Continue'
-# this wait takes into account the need to configure desktop experience on the server. This can
-# take a while - left here as 2 minutes which should be more than enough.
-Write-Verbose " Waiting until $( (get-date).AddMinutes(3) ) for reboot of srv1"
-#start-sleep 120 # give reboot some time to finish
-Write-Verbose ' Ended waiting'
 
 #     Set Credentials for SRV1
 Write-Verbose ' setting credentials'
@@ -95,6 +88,9 @@ Write-Verbose " Cert being used has thumbprint: [$Thumbprint]"
 #     Add $cert to IIS Bindings for the whole SRV1 site
 Write-Verbose "Setting SSL bindings with this cert"
 New-Item IIS:\SSLBindings\0.0.0.0!443 -value $Cert
+
+####  TODO - add some code to copy the self signed cert to local machine's CA cert store.
+
 } #   End of Conf2 script block
 
 # Here is the start of the script.
@@ -115,16 +111,16 @@ $credrk     = New-Object -Typename  System.Management.Automation.PSCredential -A
 $VerbosePreference = 'Continue'
 
 #     Before invoking the script block Conf1, do a check to ensure we have right machine
-Invoke-Command -ComputerName SRV1 -ScriptBlock {ipconfig; hostname} -Credential $credrk -Verbose
+Invoke-Command -ComputerName SRV1.reskit.org -ScriptBlock {ipconfig; hostname} -Credential $credrk -Verbose
 Pause
  
 #     Perform initial configure of Srv1 with Conf script block
-Invoke-Command -ComputerName SRV1 -Scriptblock $conf -Credential $credrk -Verbose
+Invoke-Command -ComputerName SRV1.reskit.org -Scriptblock $conf -Credential $credrk -Verbose
 
 
 #     Reboot the server and wait till it comes back up
 Write-Verbose 'Rebooting system, please be patient'
-Restart-Computer -ComputerName SRV1  -Wait -For PowerShell -Force -Credential $CredRK
+Restart-Computer -ComputerName SRV1.reskit.org  -Wait -For PowerShell -Force -Credential $CredRK
 
 
 #     Configure Srv1 with a cert - needed previous block to complete before we can use CredSSP

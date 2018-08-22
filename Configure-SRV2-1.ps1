@@ -34,10 +34,10 @@ Write-Verbose -Message 'Setting Monitor poweroff to zero'
 powercfg /change monitor-timeout-ac 0
 
 # Add Windows Features
-Write-Verbose "Adding key Windows features to SRV2"
-$Features = @('PowerShell-ISE','Hyper-V-PowerShell',
-              'Telnet-Client', 'Desktop-Experience')
-Install-WindowsFeature $Features -IncludeManagementTools -Verbose
+#Write-Verbose "Adding key Windows features to SRV2"
+#$Features = @('PowerShell-ISE','Hyper-V-PowerShell',
+              #'Telnet-Client', 'Desktop-Experience')
+#Install-WindowsFeature $Features -IncludeManagementTools -Verbose
 
 # Finally, Force a GPUpdate.
 Write-Verbose 'Forcing a GP Update'

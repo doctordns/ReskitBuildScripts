@@ -8,6 +8,7 @@
 # 1.1.1      25 Jan 2013  Added auto admin logon
 # 1.1.2      5  Feb 2013  Added forced reboot of DC1-1 at script end
 # 1.1.4      24 Feb 2013  Moved autoadmin login settings to -2 script 
+# 1.1.5      20 Jul 2018  Updated for new book, and for less on DC1
 
 # Define Conf script block to do configuration
 $conf = {
@@ -24,7 +25,12 @@ Install-WindowsFeature AD-Domain-Services -IncludeManagementTools
 # Now install the AD to DC1 - the reboot is or should be automagic
 Write-Verbose "Creating a new Forest/Domain/DNS/DC - DC1"
 $PasswordSS = ConvertTo-SecureString  -string 'Pa$$w0rd' -AsPlainText -Force
-Install-ADDSForest -DomainName Reskit.Org -SafeModeAdministratorPassword $PasswordSS -force -InstallDNS -DomainMode Win2012 -ForestMode Win2012 -NoReboot
+Install-ADDSForest -DomainName Reskit.Org `
+                   -SafeModeAdministratorPassword $PasswordSS `
+                   -Force -InstallDNS `
+                   -DomainMode WinThreshold `
+                   -ForestMode WinThreshold `
+                   -NoReboot
 
 # Say nice things and finish
 $FinishTime = Get-Date
@@ -46,11 +52,7 @@ $Username   = 'dc1\Administrator'
 $PasswordSS = ConvertTo-SecureString 'Pa$$w0rd' -AsPlainText -Force
 $CredDC1    = New-Object System.management.Automation.PSCredential $Username,$PasswordSS
 
-# Optionally, create a snapshot pre-DC promotion to allow reverting.
-# Write-Verbose 'Checkpointing DC1 pre promotion, post os creation'
-# Checkpoint-VM -VM $(Get-VM DC1) -SnapshotName "DC1 - Post OS Creation" 
-
- # Since this is the first VM configured, make Sure that we enable CredSSP on the host
+# Since presumably this is the first VM configured, make Sure that we enable CredSSP on the host
 Write-Verbose " Enabling CredSSP on $(hostname)"
 Write-Verbose ' Convigure CredSSP client'
 Enable-WSManCredSSP -Role Client -DelegateComputer '*.reskit.org' -Force 

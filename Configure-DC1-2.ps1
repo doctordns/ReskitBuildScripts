@@ -11,6 +11,7 @@
 # 1.1.2       5 Feb 2013  Added forced reboot of DC1-1 at script end 
 # 1.1.3      16 Feb 2013  Moved setting autoadmin logon to 1st conf file 
 # 1.1.4       8 Nov 2013  Added powercfg call to stop monitor timeout,
+# 1.1.5      20 Aug 2018  update for 2016, and removed any addition of extra features
 #                         
 ####
 
@@ -51,15 +52,6 @@ Set-ItemProperty -Path $RegPath -Name DefaultDomainName -Value $Dom      -EA 0
 # And here set the PowerConfig to not turn off the monitor!
 Write-Verbose -Message 'Setting Monitor poweroff to zero'
 powercfg /change monitor-timeout-ac 0
-
-#    Install key Windows features for labs
-Write-Verbose 'Installing key features for labs'
-Import-Module ServerManager
-Write-Verbose 'Installing minimal Windows features needed for DC1'
-Import-Module ServerManager -verbose:$false -EA 0
-$Features = @('Rsat-AD-PowerShell' )
-Install-WindowsFeature $Features -IncludeManagementTools -Verbose
-Write-Verbose 'Installed minimal Windows features needed for DC1'
 
 #    Install and configure DHCP
 Write-Verbose -Message 'Adding and then configuring DHCP'
@@ -130,8 +122,9 @@ Invoke-Command -ComputerName DC1.reskit.org -ScriptBlock {ipconfig;hostname} -Cr
 Pause
 
 # now run the script to finish configuring dc1
-Invoke-Command -ComputerName DC1 -Scriptblock $conf -Credential $CredRK -verbose
+Invoke-Command -ComputerName DC1.Reskit.org -Scriptblock $conf -Credential $CredRK -verbose
 Write-Verbose 'Configuration complete, rebooting'
+pause
 
 #     OK - script block has completed - reboot the system and wait till it comes up
 Write-Verbose 'Restarting'
@@ -140,4 +133,5 @@ Restart-Computer -ComputerName DC1.reskit.org  -Wait -For PowerShell -Force -Cre
 #    Finally, run a post-DCPromo snapshot
 # Checkpoint-VM -VM $(Get-VM DC1) -SnapshotName "DC1 - post configuration by Configure-DC1-2.ps1" 
  
-Write-Verbose "Configure-DC1-2.ps1 is complete. You can now move on to the next configuration task once DC1 is rebooted"
+Write-Verbose "Configure-DC1-2.ps1 is complete. "
+Write-Verbose "You can now move on to the next configuration task once DC1 is rebooted"

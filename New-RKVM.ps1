@@ -113,9 +113,6 @@ Function New-RKVM {
     Set-VM -Name $name -AutomaticStartAction Nothing
     Set-Vm -Name $name -AutomaticStopAction ShutDown
 
-    #  Add 2nd nic attached to External Switch
-    Add-VMNetworkAdapter -VMName $name -SwitchName External
-
     #    Show what has been created!
     "VM Created:"
     Get-VM -Name $name | Format-List *
@@ -176,7 +173,7 @@ $Start = Get-Date
 #
 #    Create the DC - NON-domained joined
 
-# New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
+ New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
 
 #    Remaining VMs use the domain-join version of unattend.xml
 #
