@@ -171,43 +171,49 @@ $Start = Get-Date
 #
 # Create VMs for Intro V3/4, Advanced And GEEKWEEK
 #
-#    Create the DC - NON-domained joined
+#    Create the DC - Initially NON-domain joined
 
- New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
+# New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
 
+
+#
 #    Remaining VMs use the domain-join version of unattend.xml
 #
 
 #    A second DC for reskit.org 
 # New-RKVM -name "DC2"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 756mb
 
-# CA Servers
-# New-RKVM -Name "ROOTCA" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.20/24' -DNSSvr 10.10.10.10  -VMMemory 1gb 
-# New-RKVM -name "CA"     -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.21/24' -DNSSvr 10.10.10.10  -VMMemory 1gb 
+#    CA Servers
+# NB: ROOTCA is NOT domain Joined
+# New-RKVM -Name "ROOTCA" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una   -Verbose -IPAddr '10.10.10.20/24' -DNSSvr 10.10.10.10  -VMMemory 1gb 
+# New-RKVM -name "CA"     -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.21/24' -DNSSvr 10.10.10.10  -VMMemory 1gb 
 
-# General Servers
+#    General Servers
 # New-RKVM -name "SRV1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.50/24' -DNSSvr 10.10.10.10  -VMMemory 1GB
 # New-RKVM -name "SRV2"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.51/24' -DNSSvr 10.10.10.10  -VMMemory 1GB
-
 
 #    FS1, FS1 - file servers for which to cluster-Attachments "\\folder\file*.xlsx" 
 # New-RKVM -name "FS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.101/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
 # New-RKVM -name "FS2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.102/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
 
+#    Storage Servers
+# New-RKVM -name "SSRV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.111/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
+# New-RKVM -name "SSRV2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.112/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
+# New-RKVM -name "SSRV3" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.113/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
+
 #    HV1, HV2 - Hyper-V Servers
 # New-RKVM -name "HV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.201/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
 # New-RKVM -name "HV2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.202/24' -DNSSvr 10.10.10.10 -VMMemory 2gb
 
-# WSUS1 WSUS Server
-# New-RKVM -name "WSUS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.251/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
-
-# Print Server
-# New-RKVMM -name "PSRV" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.60/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
-
-
-# NLB servers
+#    NLB servers
 # New-RKVM -name "NLB1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.53/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
 # New-RKVM -name "NLB2"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.54/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
+
+#    Print Server
+# New-RKVMM -name "PSRV" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.60/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
+
+#    WSUS Server
+# New-RKVM -name "WSUS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.251/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
 
 
 
