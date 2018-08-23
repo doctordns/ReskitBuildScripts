@@ -197,8 +197,8 @@ $Start = Get-Date
 # New-RKVM -name "FS2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.102/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
 
 #    Storage Servers
-# New-RKVM -name "SSRV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.111/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
-# New-RKVM -name "SSRV2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.112/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
+ New-RKVM -name "SSRV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.111/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
+ New-RKVM -name "SSRV2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.112/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
  New-RKVM -name "SSRV3" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.113/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
 
 #    HV1, HV2 - Hyper-V Servers
