@@ -9,6 +9,7 @@
 
 ###  SET Variables
 $VerbosePreference = 'Continue'
+
 #    Set Credentials
 $Username   = "Reskit\administrator"
 $Password   = 'Pa$$w0rd'
@@ -64,6 +65,17 @@ $Ht = @{name='Length(GB)'
         }
 
 Get-ChildItem -Path D:\v6\ssrv*.vhdx -Recurse | FT Fullname, $ht
+
+#  Check NICs and add one if needed.
+
+1..3 | foreach {
+  $nics = Get-VMNetworkAdapter -VMName "SSRV$_" 
+  If ($Nics.count -eq 1) {
+  "adding External nic to SSRV$_"
+  Add-VMNetworkAdapter -VMName "SSRV$_" -SwitchName 'External'
+  }
+  Else {"Not adding 2nd NIC"}
+}
 
 # Start the VMs
 Start-VM -VMName SSRV1, SSRV2, SSRV3
