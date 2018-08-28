@@ -24,12 +24,14 @@ Depending on the version of Windows Server in use (and what license keys you may
 
 ### Setup Environment
 
-On the VM host, create a **d:\V6** as the location for the VMs.
-Then copy the two unattended XML files **\unattended XML\Unattend.xml* and *\unattended XML\UnAttend.DJ.xml** into **D:\v6** on the VM host.
+On the VM host, create a **Dd:\V6** as the location for the VMs.
+Then copy the two unattended XML files **\unattended XML\Unattend.xml* and **\unattended XML\UnAttend.DJ.xml** into **D:\v6** on the VM host.
 
 ### Create a Reference Disk
 
-Use **New-ReferenceVHDX.ps1*.
+Use **New-ReferenceVHDX.ps1**.
+
+
 Ensure paths are correct to the ISO and output vhdx.
 Do not proceed until the reference disk is created.
 To test the reference disk more completely, copy the file and create a VM using that copy.
@@ -38,6 +40,8 @@ If the installation of WIndows Server 2019 on that copied VHDx is successful, yo
 ### Create DC1 VM
 
 Use **New-RKVM.ps1**.
+
+
 This script has a function that creates a VM followed by calls to that function.
 As delivered from GitHub, the script creates no VMs as all the calls to the function have been commented out.
 You should ensure all calls are commented out atn that the function compiles and the script runs OK.
@@ -46,22 +50,22 @@ Then you can un-comment the call to create DC1 and run the script again to creat
 ### Configure DC1 (and your host!)
 
 Depending on the version of 2019 you use you may need to enter a Product key (or to direct setup to must move on).
-So once DC1 is created,you can run Configure-DC1-1 to create DC1 system as a DC in the Reskit.Org domain.
+So once DC1 is created,you can run **Configure-DC1-1.ps1** to create DC1 system as a DC in the Reskit.Org domain.
 This script also sets up the host to do CredSSP into DC1.
-THen run Configure-DC1-2 to complete the setup of DC1.
+Then run **Configure-DC1-2.ps1** to complete the setup of DC1.
 
 ### Create SRV1, SRV2
 
 Once you have the DC created, you can create the other servers.
-Use the **New-RKVM** script to create SRV1, SRV2
+Use the **New-RKVM.ps1** script to create SRV1, SRV2
 
 ### Configure SRV1 and SRV2
 
-Use the **Configure-SRV1-.ps11** scripts to create SRV1
-Use the **Configure-SRV2-1.ps1** scripts to create SRV2
+Use the **Configure-SRV1-.ps11** scripts to create SRV1.
+Then use the **Configure-SRV2-1.ps1** scripts to create SRV2
 
 ### Create other VMs
 
-For each additional VM, use #New-RKVM# to create the VM.
+For each additional VM, use **New-RKVM.ps1** to create the VM.
 For the most part, the additional VMs need no additional configuration as that work is done by the individual recipes.
 IF pre-configuration of any VM is needed, additional **Configure-<SERVER>-1** files are created. 
