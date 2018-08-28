@@ -13,8 +13,9 @@ I have used variables widely to hold the names of things that DO vary (eg iso fi
 PLEASE review before using.
 
 ## General Approach
+
 The scripts create a set of Hyper-V Vms that make up a corporate data centre.
-These VMs are based on a differencing disk for all servers.
+These VMs are based on a difference disk for all servers.
 At present Reskit.Org client systems are manually installed (to do!)
 That includes DCs, a CA hierarchy, DNS/DHCP services, and more.
 Depending on the version of Windows Server in use (and what license keys you may or may not have) there is some manual intervention needed.
@@ -23,20 +24,24 @@ Depending on the version of Windows Server in use (and what license keys you may
 
 ### Setup Environment
 
-On the VM host, create a d:\V6 as the location for the VMs.
-Then copy the two unattended XML files \unattended XML\Unattend.xml and \unattended XML\UnAttend.DJ.xml into d:\v6 on the VM host.
+On the VM host, create a **d:\V6** as the location for the VMs.
+Then copy the two unattended XML files **\unattended XML\Unattend.xml* and *\unattended XML\UnAttend.DJ.xml** into **D:\v6** on the VM host.
 
 ### Create a Reference Disk
 
-Use New-ReferenceVHDX.ps1 - ensure paths are correct to the ISO and output vhdx.
-Do not proceed until the reference disk is created
+Use **New-ReferenceVHDX.ps1*.
+Ensure paths are correct to the ISO and output vhdx.
+Do not proceed until the reference disk is created.
+To test the reference disk more completely, copy the file and create a VM using that copy.
+If the installation of WIndows Server 2019 on that copied VHDx is successful, you should be good to move forward.
 
 ### Create DC1 VM
 
 Use **New-RKVM.ps1**.
-This script has a function that creates a VM and some calls to that function.
-Comment out all the calls to ensure the function compiles.
-Then un-comment the call to create DC1 and run the script again to create DC1 VM.
+This script has a function that creates a VM followed by calls to that function.
+As delivered from GitHub, the script creates no VMs as all the calls to the function have been commented out.
+You should ensure all calls are commented out atn that the function compiles and the script runs OK.
+Then you can un-comment the call to create DC1 and run the script again to create DC1 VM.
 
 ### Configure DC1 (and your host!)
 
