@@ -23,7 +23,6 @@ Depending on the version of Windows Server in use (and what license keys you may
 
 ### Setup Environment
 
-
 On the VM host, create a d:\V6 as the location for the VMs.
 Then copy the two unattended XML files \unattended XML\Unattend.xml and \unattended XML\UnAttend.DJ.xml into d:\v6 on the VM host.
 
@@ -34,7 +33,7 @@ Do not proceed until the reference disk is created
 
 ### Create DC1 VM
 
-Use #New-RKVM#.
+Use ##New-RKVM##.
 This script has a function that creates a VM and some calls to that function.
 Comment out all the calls to ensure the function compiles.
 Then un-comment the call to create DC1 and run the script again to create DC1 VM.
@@ -49,7 +48,7 @@ THen run Configure-DC1-2 to complete the setup of DC1.
 ### Create SRV1, SRV2
 
 Once you have the DC created, you can create the other servers.
-Use the #New-RKVM# script to create SRV1, SRV2
+Use the ##New-RKVM## script to create SRV1, SRV2
 
 ### Configure SRV1 and SRV2
 
