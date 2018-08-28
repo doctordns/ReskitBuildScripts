@@ -1,6 +1,7 @@
 ﻿####
 # Configure-Storage Servers
 # Configures SSRV1-3 for storage spaces and storage spaces direct
+# Run from VM Host to configure the three S2D servers
 #
 # Version    Date         What Changed
 # -------    -----------  -------------------------------------------
@@ -28,9 +29,10 @@ Set-VMProcessor -VMName SSRV2 -ExposeVirtualizationExtensions $true -count 2
 Set-VMProcessor -VMName SSRV3 -ExposeVirtualizationExtensions $true -count 2
 
 # Create disks for SSRVx VMs
-Write-Verbose 'Creating new VHDXs'
 $VHDPath = 'D:\v6'
-# for STSD
+Write-Verbose 'Creating new VHDXs to [$VHDPath]'
+
+# create 3 disks for each server
 New-VHD -path D:\v6\SSRV1\ssrv1d1.vhdx -Size 128GB -Dynamic | Out-Null
 New-VHD -path D:\v6\SSRV1\ssrv1d2.vhdx -Size 128GB -Dynamic | Out-Null
 New-VHD -path D:\v6\SSRV1\ssrv1d3.vhdx -Size 128GB -Dynamic | Out-Null
@@ -51,10 +53,11 @@ Add-VMHardDiskDrive -VMName SSRV1 -Path D:\v6\SSRV1\ssrv1d1.vhdx -ControllerType
 Add-VMHardDiskDrive -VMName SSRV1 -Path D:\v6\SSRV1\ssrv1d2.vhdx -ControllerType SCSI -ControllerNumber 0
 Add-VMHardDiskDrive -VMName SSRV1 -Path D:\v6\SSRV1\ssrv1d3.vhdx -ControllerType SCSI -ControllerNumber 0
 
-# For SSRV2 - disks on controller 0
-Add-VMHardDiskDrive -VMName SSRV2 -Path D:\v6\SSRV2\ssrv2d1.vhdx -ControllerType SCSI -ControllerNumber 0
-Add-VMHardDiskDrive -VMName SSRV2 -Path D:\v6\SSRV2\ssrv2d2.vhdx -ControllerType SCSI -ControllerNumber 0
-Add-VMHardDiskDrive -VMName SSRV2 -Path D:\v6\SSRV2\ssrv2d3.vhdx -ControllerType SCSI -ControllerNumber 0
+# For SSRV2 - disks on controller 1
+Add-VMScsiController -VMName SSRV2 # add controller 1
+Add-VMHardDiskDrive -VMName SSRV2 -Path D:\v6\SSRV2\ssrv2d1.vhdx -ControllerType SCSI -ControllerNumber 1
+Add-VMHardDiskDrive -VMName SSRV2 -Path D:\v6\SSRV2\ssrv2d2.vhdx -ControllerType SCSI -ControllerNumber 1
+Add-VMHardDiskDrive -VMName SSRV2 -Path D:\v6\SSRV2\ssrv2d3.vhdx -ControllerType SCSI -ControllerNumber 1
 
 # For SSRV5 - 3 disks on separate controllers
 Add-VMScsiController -VMName SSRV3 # add controller 1
@@ -85,16 +88,21 @@ Get-ChildItem -Path D:\v6\ssrv*.vhdx -Recurse | FT Fullname, $ht
 }
 
 # Start the VMs
-Start-VM -VMName SSRV1, SSRV2, SSRV3
+Start-VM -VMName SSRV1, SSRV2, SSRV3 
 
 
-# reset verbose
-Write-Verbose "Resetting verbose preference to [$OVP]"
-$VerbosePreference =$OVP 
+# Create a configuration script block to configure each VM
 
-# in each Vm..
+$Conf = {
+$vbo = $VerbosePreference #on the remote server
+$VerbosePreference = 'Continue'
 
-$Conf = {# Define registry path for autologon, then set admin logon
+# Start updating help
+Write-Vervose "Starting update to help on $(Hostname)" 
+$HelpJob = Start-Job -ScriptBlock{Update-Help -Force}
+
+# Define registry path for autologon, then set admin logon
+Write-Verbose "Configuring Server [$(hostname)]"
 Write-Verbose -Message 'Setting Autologon'
 $RegPath  = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
 $user     = 'Administrator'
@@ -112,8 +120,9 @@ powercfg /change monitor-timeout-ac 0
 #  Add PSUpdate
 Install-PackageProvider -Name Nuget -Force
 Install-Module PSWindowsUpdate -Force
-
-}
+Write-Verbose "Finished on Server [$(hostname)]"
+$VerbosePreference = $vbo 
+} # end of conf configuration script block
 
 $Computers = 'SSRV1.Reskit.Org',
              'SSRV2.Reskit.Org',
@@ -125,7 +134,19 @@ $ICMHT = @{
 }
 Invoke-Command @ICMHT
 
+
+# almost done
+Stop-Vm -VMName SSRV1, SSRV2, SSRV3 -Force -TurnOff
+Checkpoint-VM -name ssrv* -SnapshotName 'After configuration of servers'
+
+# reset verbose preference
+$VerbosePreference =$OVP 
+
+# we are done
 Write-Verbose "Configure-SSRV.ps1 is complete. "
+
+
+
 
 
 

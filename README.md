@@ -21,35 +21,44 @@ Depending on the version of Windows Server in use (and what license keys you may
 
 ## Steps
 
-1. Setup Environment
+### Setup Environment
 
 
 On the VM host, create a d:\V6 as the location for the VMs.
 Then copy the two unattended XML files \unattended XML\Unattend.xml and \unattended XML\UnAttend.DJ.xml into d:\v6 on the VM host.
 
-2. Create a reference disk
+### Create a Reference Disk
 
 Use New-ReferenceVHDX.ps1 - ensure paths are correct to the ISO and output vhdx.
 Do not proceed until the reference disk is created
 
-3. Create DC1 VM
+### Create DC1 VM
 
-Use New-RKVM. This script has a function that creates a VM and some calls to that function.
-First, comment out all the calls to ensure the function compiles.
-Then uncomment the relevant calls and create VMs. 
-Create DC1 VM first, and get if fully configured.
-Then come back and create more.
+Use #New-RKVM#.
+This script has a function that creates a VM and some calls to that function.
+Comment out all the calls to ensure the function compiles.
+Then un-comment the call to create DC1 and run the script again to create DC1 VM.
 
+### Configure DC1 (and your host!)
 
-4. Configure DC1 (and your host!)
-Run Configure-DC1-1 to create DC1 system as a DC in the Reskit.Org domain.
+Depending on the version of 2019 you use you may need to enter a Product key (or to direct setup to must move on).
+So once DC1 is created,you can run Configure-DC1-1 to create DC1 system as a DC in the Reskit.Org domain.
 This script also sets up the host to do CredSSP into DC1.
+THen run Configure-DC1-2 to complete the setup of DC1.
 
-4. Create SRV1, SRV25
+### Create SRV1, SRV2
 
-6. Configure SRV1
+Once you have the DC created, you can create the other servers.
+Use the #New-RKVM# script to create SRV1, SRV2
 
+### Configure SRV1 and SRV2
 
-7. Configure SRV2
+Use the #Configure-SRV1-1# scripts to create SRV1
+Use the #Configure-SRV2-1# scripts to create SRV2
 
-8. Create other VMs as needed - with configuration being done by recipes.
+### Create other VMs
+
+For each additional VM, use #New-RKVM# to create the VM.
+For the most part, the additional VMs need no additional configuration as that work is done by the individual recipes.
+IF pre-configuration of any VM is needed, additional #Configure-<SERVER>-1 files are created. 
+
