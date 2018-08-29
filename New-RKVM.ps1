@@ -133,18 +133,18 @@ Function New-RKVM {
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS     #
 
 # Location of Server 2012 DVD Iso Image
-$Iso   = 'd:\builds\Windows_InsiderPreview_Server_vNext_en-us_17733.iso'
+$Iso   = 'D:\builds\Windows_InsiderPreview_Server_vNext_en-us_17733.iso'
 
 # Where we put the reference VHDX
 # Be careful here - make sure this is the file you just created in Create-ReferenceVHDX
-$Ref   = 'd:\v6\Ref2019.vhdx'
+$Ref   = 'D:\v6\Ref2019.vhdx'
 
 # Path were VMs, VHDXs and unattend.txt files live
-$Path  = 'd:\v6'
+$Path  = 'D:\v6'
 
 # Location of Unattend.xml - first for workstation systems, second for domain joined systems 
-$Una   = 'd:\v6\UnAttend.xml'
-$Unadj = 'd:\v6\UnAttend.dj.xml'
+$Una   = 'D:\v6\UnAttend.xml'
+$Unadj = 'D:\v6\UnAttend.dj.xml'
 
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS     #
 #######################################################################################################
@@ -197,9 +197,9 @@ $Start = Get-Date
 # New-RKVM -name "FS2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.102/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
 
 #    Storage Servers
- New-RKVM -name "SSRV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.111/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
- New-RKVM -name "SSRV2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.112/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
- New-RKVM -name "SSRV3" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.113/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
+# New-RKVM -name "SSRV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.111/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
+# New-RKVM -name "SSRV2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.112/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
+# New-RKVM -name "SSRV3" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.113/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
 
 #    HV1, HV2 - Hyper-V Servers
 # New-RKVM -name "HV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.201/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
@@ -215,6 +215,8 @@ $Start = Get-Date
 #    WSUS Server
 # New-RKVM -name "WSUS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.251/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
 
+#    Container Host
+# New-RKVM -name "CH1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.221/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
 
 
 #######################################################################################################

@@ -30,8 +30,15 @@ Suitably updated - this is nearly a hosts file for the HV host.
 10.10.10.102     FS2.Reskit.Org  
 
 # Storage Server (iSCSI target)
-10.10.10.110     SSRV.Reskit.Org
+10.10.10.110     SSRV.Reskit.Org    # Cluster name
+10.10.10.111     SSRV1.Reskit.Org
+10.10.10.112     SSRV3.Reskit.Org
+10.10.10.113     SSRV3.Reskit.Org
 ```
+
+## DHCP range
+
+10.10.10.150 - 10.10.10.199
 
 ## Hyper-V nodes
 
@@ -42,6 +49,9 @@ Suitably updated - this is nearly a hosts file for the HV host.
 10.10.10.201     HV1.Reskit.Org  
 10.10.10.202     HV2.Reskit.Org  
 ```
+
+# Container Host
+10.10.10.221      CH1.Reskit.Org
 
 ## Windows Systems Update Services (WSUS)
 
