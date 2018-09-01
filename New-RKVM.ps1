@@ -10,9 +10,12 @@
 # First define the create-VM Function
 
 Function New-RKVM {
-    #===================================================
-    # Create a New VM
-    #===================================================
+
+#  +---------------------------------------------+
+#  !                                             !
+#  !           Create a New VM                   !
+#  !                                             !
+#  +---------------------------------------------+
 
     # Parameters are Name, Virtual Machine Path, path to reference vhdx, network switch to use,
     # VM Memory, Unattend file, IP address and DNS Server to set
@@ -184,8 +187,8 @@ $Start = Get-Date
 #  FOR POWERSHELL COOKBOOK USE
 # Create DC1 and DC2 as NON-domain joined and allow book recipes to configure
 # Since both are workgroup systems, run at same time, then configure with book recipes
-# New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network 'Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
-# New-RKVM -name 'DC2'  -vmPath $path -ReferenceVHD $ref -network 'Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 756mb
+ New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
+ New-RKVM -name 'DC2'  -vmPath $path -ReferenceVHD $ref -network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 756mb
 
 #
 #    Remaining VMs use the domain-join version of unattend.xml
