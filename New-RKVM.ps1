@@ -169,19 +169,27 @@ $Start = Get-Date
 
 ##############
 #
-# Create VMs for Intro V3/4, Advanced And GEEKWEEK
+# Create VMs for all environments
 #
-#    Create the DC - Initially NON-domain joined
-
+# For general use, use the Configure-DC1* scripts to configure DC1 as a nice DC!
+# For the PowerShell Cookbook, create two separate workgroup servers and allow the recipes to configure.
+#
+#  FOR GENERAL USE
+#    Create DC1 as NON-domain joined
 # New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
+#    Configure DC1 using relevant scripts THEN create DC2
+# New-RKVM -name "DC2"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 1gb
+#
 
+#  FOR POWERSHELL COOKBOOK USE
+# Create DC1 and DC2 as NON-domain joined and allow book recipes to configure
+# Since both are workgroup systems, run at same time, then configure with book recipes
+# New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network 'Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
+# New-RKVM -name 'DC2'  -vmPath $path -ReferenceVHD $ref -network 'Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 756mb
 
 #
 #    Remaining VMs use the domain-join version of unattend.xml
 #
-
-#    A second DC for reskit.org 
-# New-RKVM -name "DC2"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 756mb
 
 #    CA Servers
 # NB: ROOTCA is NOT domain Joined
