@@ -36,12 +36,13 @@ Powercfg /change monitor-timeout-ac 0
 
 # Here we used to install minimal Windows features
 # Add Web server and management tools/console
-<# removed since book scripts are going to add all this stuff.
+# If you are following the book vs the course, you may want to 
+# remove this step.
 Write-Verbose ' Installing key Windows features for labs'
+
 $Features = @('Web-Server','Web-Mgmt-Tools','Web-Mgmt-Console',
               'Web-Scripting-Tools')
 Install-WindowsFeature $Features -IncludeManagementTools 
-#>
 
 #     Next, enable CredSSP on Srv1
 Write-Verbose ' Enabling CredSSP'
@@ -60,9 +61,10 @@ Write-Host "Configuring SRV1 took $(($FinishTime - $StartTime).totalseconds.tost
 
 $conf2 = {
 $VerbosePreference = 'Continue'
+Write-Verbose 'Starting 2nd conf block'
 
 #     Set Credentials for SRV1
-Write-Verbose ' setting credentials'
+Write-Verbose ' Segtting credentials'
 $Username   = "reskit\administrator"
 $PasswordSS = ConvertTo-SecureString  -string 'Pa$$w0rd' -AsPlainText -Force
 $credrk     = New-Object -Typename  System.Management.Automation.PSCredential -Argumentlist $username,$PasswordSS
@@ -78,6 +80,7 @@ New-WebBinding -Name "Default Web Site" -IP "*" -Port 443 -Protocol https
 #     Get a cert for this VM
 Write-Verbose ' Creating self signed certificate - this will take a moment'
 New-SelfSignedCertificate -DNS SRV1.Reskit.Org -CertStoreLocation cert:\LocalMachine\my
+Write-Verbose 'Self signed certificate created, but is untrusted'
 
 #     Ok now get that cert into $cert
 #     There should now only be 1 cert in the local machine's my store
@@ -91,21 +94,39 @@ New-Item IIS:\SSLBindings\0.0.0.0!443 -value $Cert
 
 ####  TODO - add some code to copy the self signed cert to local machine's CA cert store.
 
+Write-Verbose 'Finished 2nd conf block running in SRV1'
+
 } #   End of Conf2 script block
 
 # Here is the start of the script.
 
-# First, we set credentials then invoke the first script block on SRV1. This
+#  Before starting - if you want VM internet access run this next section
+Write-Verbose 'Adding second NIC to SRV1 to enable Inet access'
+$I = Get-VMSwitch -Name External -ErrorAction SilentlyContinue
+If (! $I)
+ {'External switch does not exist - quitting';exit}
+
+$N =  Get-VMNetworkAdapter -VMName SRV1
+if ($N.count -ge 2)  # already a 2nd or more nic??
+   {'Two nics already in the vm - skipping 2nd nic creation'}
+else {  # add second NIC but stop VM first
+ Stop-VM -VMName SRV1
+ Add-VMNetworkAdapter -VMName SRV1 -SwitchName 'External'   # adjust switch name as needed
+ Start-VM -VMName SRV1
+}
+
+#  Set credentials then invoke the first script block on SRV1. This
 #  enables autoadminlogon, adds key Windows features labs need, 
-# installs RSAT tools, CredSSP,  then does a group policy update. 
+#  installs RSAT tools, CredSSP,  then does a group policy update. The
+#  server is then rebooted to effect CredSSP. 
 #
-# A second script block, Conf2
-# then runs to setup SSL on SRV1 using CredSSP logon!
+#  A second script block, Conf2, then runs to setup SSL on SRV1 
+#  using CredSSP logon.
 
 #     Set Credentials for SRV1
 $Username   = "reskit\administrator"
 $PasswordSS = ConvertTo-SecureString  -string 'Pa$$w0rd' -AsPlainText -Force
-$credrk     = New-Object -Typename  System.Management.Automation.PSCredential -Argumentlist $username,$PasswordSS
+$Credrk     = New-Object -Typename  System.Management.Automation.PSCredential -Argumentlist $username,$PasswordSS
 
 #     Set Vervbose mode on
 $VerbosePreference = 'Continue'
@@ -117,16 +138,13 @@ Pause
 #     Perform initial configure of Srv1 with Conf script block
 Invoke-Command -ComputerName SRV1.reskit.org -Scriptblock $conf -Credential $credrk -Verbose
 
-
 #     Reboot the server and wait till it comes back up
 Write-Verbose 'Rebooting system, please be patient'
 Restart-Computer -ComputerName SRV1.reskit.org  -Wait -For PowerShell -Force -Credential $CredRK
 
-
 #     Configure Srv1 with a cert - needed previous block to complete before we can use CredSSP
 Write-Verbose 'Running Conf2 script block to give this server a cert and install SSL'
 Invoke-command -ComputerName SRV1 -Scriptblock $conf2 -Credential $Credrk -Verbose -Authentication Credssp 
-
 
 #     OK - script block has completed - reboot the system and wait till it comes up
 Write-Verbose ' Rebooting SRV1 - please be patient'

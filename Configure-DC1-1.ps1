@@ -70,6 +70,8 @@ Set-Item Wsman:\Localhost\client\trustedhosts '*.reskit.org' -Force
 # Now create our forest/domain/dc 
 Write-Verbose 'Configuring DC1 to be DC'
 Invoke-Command -ComputerName DC1.reskit.org -Scriptblock $conf -Credential $Creddc1 -Verbose
+Write-Verbose 'CONF block configuration of SRV1 completed.'
+pause
 
 # Complete the script by rebooting DC1
 Write-Verbose 'Rebooting DC1 - please be patient'

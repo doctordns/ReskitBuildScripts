@@ -33,11 +33,22 @@ Write-Verbose "Set autologon for $Dom\$User"
 Write-Verbose -Message 'Setting Monitor poweroff to zero'
 powercfg /change monitor-timeout-ac 0
 
-# Add Windows Features
+# For book = Do not add Windows Features
+# FOr class - adjust this...
+
 #Write-Verbose "Adding key Windows features to SRV2"
 #$Features = @('PowerShell-ISE','Hyper-V-PowerShell',
               #'Telnet-Client', 'Desktop-Experience')
 #Install-WindowsFeature $Features -IncludeManagementTools -Verbose
+
+# Eenable CredSSP on Srv2
+Write-Verbose ' Enabling CredSSP'
+Write-Verbose ' First as client on VM host'
+Enable-WSManCredSSP -Role Client -DelegateComputer '*.reskit.org' -Force 
+Write-Verbose ' Enable as server'
+Enable-WSManCredSSP -Role Server -Force
+Write-Verbose ' Setting Trusted Hosts'
+Set-Item Wsman:\Localhost\client\trustedhosts '*.reskit.org' -Force 
 
 # Finally, Force a GPUpdate.
 Write-Verbose 'Forcing a GP Update'
@@ -47,7 +58,7 @@ GpUpdate /Force
 $FinishTime = Get-Date
 Write-Verbose "Finished at: $finishtime"
 Write-Verbose "Configuring SRV2 took $(($FinishTime - $StartTime).totalseconds.tostring('n2')) seconds"
-
+$
 } # End of Conf script block
 
 #  Reskit Administrator credentials
@@ -67,4 +78,3 @@ Restart-Computer -ComputerName SRV2  -Wait -For PowerShell -Force -Credential $C
  
 #    Finally, run a post-DCPromo snapshot
 # Checkpoint-VM -VM $(Get-VM SRV2) -SnapshotName "SRV2 - Post configuration by ConfigureSRV2-1.ps1" 
-
