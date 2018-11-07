@@ -17,6 +17,10 @@
 10.10.10.51      SRV2
 10.10.10.51      SRV2.Reskit.Org
 
+# Print Server
+10.10.10.60      PSRV
+10.10.10.60      PSRV.Reskit.Org
+
 #  Cluster IP address
 10.10.10.100     FS
 10.10.10.100     FS.Reskit.Org
@@ -31,7 +35,7 @@
 10.10.10.110     SSRV.Reskit.Org
 
 # Hyper-V nodes
-10.10.10.200     HV  # Clustered address
+10.10.10.200     HVCLUS  # Clustered address
 10.10.10.201     HV1
 10.10.10.201     HV1.Reskit.Org
 10.10.10.202     HV2
