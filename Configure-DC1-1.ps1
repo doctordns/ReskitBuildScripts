@@ -54,7 +54,7 @@ $CredDC1    = New-Object System.management.Automation.PSCredential $Username,$Pa
 
 # Since presumably this is the first VM configured, make Sure that we enable CredSSP on the host
 Write-Verbose " Enabling CredSSP on $(hostname)"
-Write-Verbose ' Convigure CredSSP client'
+Write-Verbose ' Configure CredSSP client'
 Enable-WSManCredSSP -Role Client -DelegateComputer '*.reskit.org' -Force 
 Write-Verbose ' Also enable as server'
 Enable-WSManCredSSP -Role Server -Force

@@ -127,7 +127,7 @@ Write-Verbose 'Configuration complete, rebooting'
 pause
 
 #     OK - script block has completed - reboot the system and wait till it comes up
-Write-Verbose 'Restarting'
+Write-Verbose  'Restarting'
 Restart-Computer -ComputerName DC1.reskit.org  -Wait -For PowerShell -Force -Credential $CredRK
  
 #    Finally, run a post-DCPromo snapshot

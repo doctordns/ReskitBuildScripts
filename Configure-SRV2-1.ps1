@@ -1,4 +1,4 @@
-﻿# Configure-SRV2-2.ps1
+﻿# Configure-SRV2-1.ps1
 # Configures domain joined server SRV2
 
 
@@ -61,20 +61,22 @@ Write-Verbose "Configuring SRV2 took $(($FinishTime - $StartTime).totalseconds.t
 $
 } # End of Conf script block
 
+# start of script
+Write-Verbose "Starging to configure SRV2"
 #  Reskit Administrator credentials
 $PasswordSS = ConvertTo-SecureString 'Pa$$w0rd' -AsPlainText -Force
 $Username = "Reskit\administrator"
 $Credrk = New-Object System.Management.Automation.PSCredential $Username,$PasswordSS
 
 # Testing first, then do the conf block
-Invoke-command -ComputerName SRV2 -ScriptBlock {ipconfig;hostname} -Credential $Credrk -Verbose
+Invoke-command -ComputerName SRV2.reskit.org -ScriptBlock {ipconfig;hostname} -Credential $Credrk -Verbose
 Pause
 
 # Now run the conf stcipt block to configure SRV2
-Invoke-command -ComputerName SRV2 -Scriptblock $conf -Credential $credrk -Verbose
+Invoke-command -ComputerName SRV2.reskit.org -Scriptblock $conf -Credential $credrk -Verbose
 
 #     OK - script block has completed - reboot the system and wait till it comes up
-Restart-Computer -ComputerName SRV2  -Wait -For PowerShell -Force -Credential $CredRK
+Restart-Computer -ComputerName SRV2.reskir.org  -Wait -For PowerShell -Force -Credential $CredRK
  
 #    Finally, run a post-DCPromo snapshot
 # Checkpoint-VM -VM $(Get-VM SRV2) -SnapshotName "SRV2 - Post configuration by ConfigureSRV2-1.ps1" 

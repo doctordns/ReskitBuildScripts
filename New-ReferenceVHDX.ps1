@@ -47,7 +47,7 @@ Write-Verbose 'Getting disk image of the ISO'
 $ISOImage = Get-DiskImage -ImagePath $ISO | Get-Volume
 Write-Verbose "Got disk image [$($ISOImage.DriveLetter)]"
 
-# Get the drive Letter of the dirve where the image is mounted
+# Get the drive Letter of the drive where the image is mounted
 # Add the drive letter separator (:)
 $ISODrive = [string]$ISOImage.DriveLetter+":"
 Write-Verbose "OS ISO mounted on drive letter [$ISODrive]"

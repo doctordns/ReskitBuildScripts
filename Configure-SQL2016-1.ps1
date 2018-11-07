@@ -38,7 +38,7 @@ Powercfg /change monitor-timeout-ac 0
 Write-Verbose 'Installing Windows features needed for SQL Server'
 $Features = @('PowerShell-ISE','Rsat-AD-PowerShell','Hyper-V-PowerShell',
               'Web-Server','Web-Mgmt-Tools','Web-Mgmt-Console',
-              'Web-Scripting-Tools', 'Telnet-Client', 'Desktop-Experience')
+              'Web-Scripting-Tools', 'Telnet-Client')
 Install-WindowsFeature $Features -IncludeManagementTools -Verbose
 
 # Next install the .NET Framework 2.0/3.5
@@ -71,10 +71,10 @@ $conf2 = {
 
 # SQL Server 2012 Install DVD Image
 
-$sql = 'c:\builds\en_sql_server_2012_enterprise_edition_with_sp1_x64_dvd_1227976.iso'
+$sql = 'D:\Builds\en_sql_server_2016_enterprise_with_service_pack_2_x64_dvd_12124051.iso' 
 
 # Windows Server Install
-$os  ='c:\builds\9600.16384.130821-1623_x64fre_Server_EN-US_IRM_SSS_DV5.iso' 
+$os  ='D:\Builds\Windows_InsiderPreview_Server_vNext_en-us_17744.iso' 
 
 # Credentials
 $PasswordSS = ConvertTo-SecureString 'Pa$$w0rd' -AsPlainText -Force
@@ -97,27 +97,26 @@ If (Test-Path $os)  {wv "$os ISO found"}  Else {wv "$OS ISo NOT FOUND - STOPPING
 Write-Verbose "Both product CDs found"
 
 # First, test the connection to DC1
-Invoke-Command -ComputerName SQL2012 -ScriptBlock { ipconfig;hostname} -Credential $credrk -verbose
+Invoke-Command -ComputerName SQL2016 -ScriptBlock { ipconfig;hostname} -Credential $credrk -verbose
 Pause
 
-# Add the OS DVD into SQL2012 VM
+# Add the OS DVD into SQL2016 VM
 $DvdParm = @{ControllerNumber=1; 
              ControllerLocation=0;
              Path=$OS;
-             VMname="SQL2012";
+             VMname="SQL2016";
              ErrorAction=0}
 Set-VmDvdDrive @DvdParm
 
-# Now setup SQL2012 with the .NET Framework
-Invoke-Command -ComputerName SQL2012 -Scriptblock $Conf1 -Credential $Credrk -Verbose
+# Now setup SQL2016 with the .NET Framework
+Invoke-Command -ComputerName SQL2016 -Scriptblock $Conf1 -Credential $Credrk -Verbose
 Write-Verbose 'Completed Part 1 - installation of all pre-reqs for SQL1'
-Write-Verbose 'Rebooting SQL2012 to finish off installation of .NET'
-Restart-Computer -ComputerName SQL2012  -Wait -For PowerShell -Force -Credential $CredRK
+Write-Verbose 'Rebooting SQL2016 to finish off installation of .NET'
+Restart-Computer -ComputerName SQL2016  -Wait -For PowerShell -Force -Credential $CredRK
 
 # since we added desktop services - this is going to take timne to install and another reboot...
 Write-Verbose 'Waiting 5 min for desktop stuf to complete and another reboot'
 Start-sleep 300
-
 
 # Now with all pre-reqs loaded, we can install SQL
 # But first, add this DVD into SQL1 VM
@@ -127,7 +126,7 @@ $DvdParm.Path=$SQL
 Set-VmDvdDrive @DvdParm
 Write-Verbose ' Reset SQL DVD to point to SQL Server DVD'
 # Now invoke $Conf2 to Install SQL2012
-Invoke-command -ComputerName SQL2012 -Scriptblock $Conf2 -Credential $Credrk -Verbose
+Invoke-command -ComputerName SQL2016 -Scriptblock $Conf2 -Credential $Credrk -Verbose
 Write-Verbose ' Conf2 script block completed'
 
 #     OK - script block has completed - reboot the system and wait till it comes up
