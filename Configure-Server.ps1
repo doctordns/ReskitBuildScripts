@@ -1,6 +1,6 @@
 ﻿####
 # Configure-Server
-# Configures A Server
+# Configures A Server in the absence of anything specific.
 
 # Run this on the server
 
