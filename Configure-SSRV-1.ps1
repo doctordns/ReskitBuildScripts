@@ -13,7 +13,7 @@ $OVP = $VerbosePreference
 $VerbosePreference = 'Continue'
 
 #    Set Credentials
-$Username   = "Reskit\administrator"
+$Username   = 'Reskit\ThomasL'
 $Password   = 'Pa$$w0rd'
 $PasswordSS = ConvertTo-SecureString  -String $Password -AsPlainText -Force
 $CredRK     = New-Object -Typename System.Management.Automation.PSCredential -Argumentlist $Username,$PasswordSS
@@ -23,48 +23,51 @@ Stop-Vm -VMName SSRV1, SSRV2, SSRV3 -Force -TurnOff
 
 # Update hardware for each VM
 # Enable virtualisation on processors and give each SSRVx two procs
-Write-Verbose 'Enabling Hyper-B inside VMs'
-Set-VMProcessor -VMName SSRV1 -ExposeVirtualizationExtensions $true -count 2
-Set-VMProcessor -VMName SSRV2 -ExposeVirtualizationExtensions $true -count 2
-Set-VMProcessor -VMName SSRV3 -ExposeVirtualizationExtensions $true -count 2
+Write-Verbose 'Enabling Hyper-V inside VMs'
+Set-VMProcessor -VMName SSRV1 -ExposeVirtualizationExtensions $true -Count 2
+Set-VMProcessor -VMName SSRV2 -ExposeVirtualizationExtensions $true -Count 2
+Set-VMProcessor -VMName SSRV3 -ExposeVirtualizationExtensions $true -Count 2
 
 # Create disks for SSRVx VMs
 $VHDPath = 'D:\v6'
 Write-Verbose 'Creating new VHDXs to [$VHDPath]'
 
 # create 3 disks for each server
-New-VHD -path D:\v6\SSRV1\ssrv1d1.vhdx -Size 128GB -Dynamic | Out-Null
-New-VHD -path D:\v6\SSRV1\ssrv1d2.vhdx -Size 128GB -Dynamic | Out-Null
-New-VHD -path D:\v6\SSRV1\ssrv1d3.vhdx -Size 128GB -Dynamic | Out-Null
+New-VHD -Path D:\v6\SSRV1\ssrv1d1.vhdx -Size 128GB -Dynamic | Out-Null
+New-VHD -Path D:\v6\SSRV1\ssrv1d2.vhdx -Size 128GB -Dynamic | Out-Null
+New-VHD -Path D:\v6\SSRV1\ssrv1d3.vhdx -Size 128GB -Dynamic | Out-Null
 
-New-VHD -path D:\v6\SSRV2\ssrv2d1.vhdx -Size 128GB -Dynamic | Out-Null
-New-VHD -path D:\v6\SSRV2\ssrv2d2.vhdx -Size 128GB -Dynamic | Out-Null
-New-VHD -path D:\v6\SSRV2\ssrv2d3.vhdx -Size 128GB -Dynamic | Out-Null
+New-VHD -Path D:\v6\SSRV2\ssrv2d1.vhdx -Size 128GB -Dynamic | Out-Null
+New-VHD -Path D:\v6\SSRV2\ssrv2d2.vhdx -Size 128GB -Dynamic | Out-Null
+New-VHD -Path D:\v6\SSRV2\ssrv2d3.vhdx -Size 128GB -Dynamic | Out-Null
 
-New-VHD -path D:\v6\SSRV3\ssrv3d1.vhdx -Size 128GB -Dynamic | Out-Null
-New-VHD -path D:\v6\SSRV3\ssrv3d2.vhdx -Size 128GB -Dynamic | Out-Null
-New-VHD -path D:\v6\SSRV3\ssrv3d3.vhdx -Size 128GB -Dynamic | Out-Null
+New-VHD -Path D:\v6\SSRV3\ssrv3d1.vhdx -Size 128GB -Dynamic | Out-Null
+New-VHD -Path D:\v6\SSRV3\ssrv3d2.vhdx -Size 128GB -Dynamic | Out-Null
+New-VHD -Path D:\v6\SSRV3\ssrv3d3.vhdx -Size 128GB -Dynamic | Out-Null
 
 # Attach the VHDs to the respective VMs
 Write-Verbose 'Attach VHDs to VMs'
 
 # For SSRV1 -  disks on controller 0
+Write-Verbose 'Attach VHDs to Controller 0 - SSRV1'
 Add-VMHardDiskDrive -VMName SSRV1 -Path D:\v6\SSRV1\ssrv1d1.vhdx -ControllerType SCSI -ControllerNumber 0
 Add-VMHardDiskDrive -VMName SSRV1 -Path D:\v6\SSRV1\ssrv1d2.vhdx -ControllerType SCSI -ControllerNumber 0
 Add-VMHardDiskDrive -VMName SSRV1 -Path D:\v6\SSRV1\ssrv1d3.vhdx -ControllerType SCSI -ControllerNumber 0
 
 # For SSRV2 - disks on controller 1
+Write-Verbose 'Add a controler and attach 3 VHDs to Controller 1 - SSRV2'
 Add-VMScsiController -VMName SSRV2 # add controller 1
 Add-VMHardDiskDrive -VMName SSRV2 -Path D:\v6\SSRV2\ssrv2d1.vhdx -ControllerType SCSI -ControllerNumber 1
 Add-VMHardDiskDrive -VMName SSRV2 -Path D:\v6\SSRV2\ssrv2d2.vhdx -ControllerType SCSI -ControllerNumber 1
 Add-VMHardDiskDrive -VMName SSRV2 -Path D:\v6\SSRV2\ssrv2d3.vhdx -ControllerType SCSI -ControllerNumber 1
 
-# For SSRV5 - 3 disks on separate controllers
+# For SSRV3 - 3 disks on TWO separate controllers
+Write-Verbose 'Add 2 controlers and attach 3 VHDs to Controller 0,1,2 - SSRV3'
 Add-VMScsiController -VMName SSRV3 # add controller 1
 Add-VMScsiController -VMName SSRV3 # add controller 2
-Add-VMHardDiskDrive -VMName SSRV3 -Path D:\v6\SSRV3\ssrv3d1.vhdx -ControllerType SCSI -ControllerNumber 0
-Add-VMHardDiskDrive -VMName SSRV3 -Path D:\v6\SSRV3\ssrv3d2.vhdx -ControllerType SCSI -ControllerNumber 1
-Add-VMHardDiskDrive -VMName SSRV3 -Path D:\v6\SSRV3\ssrv3d3.vhdx -ControllerType SCSI -ControllerNumber 2
+Add-VMHardDiskDrive  -VMName SSRV3 -Path D:\v6\SSRV3\ssrv3d1.vhdx -ControllerType SCSI -ControllerNumber 0
+Add-VMHardDiskDrive  -VMName SSRV3 -Path D:\v6\SSRV3\ssrv3d2.vhdx -ControllerType SCSI -ControllerNumber 1
+Add-VMHardDiskDrive  -VMName SSRV3 -Path D:\v6\SSRV3\ssrv3d3.vhdx -ControllerType SCSI -ControllerNumber 2
 
 # See what have we done disk wise
 
@@ -88,7 +91,11 @@ Get-ChildItem -Path D:\v6\ssrv*.vhdx -Recurse | FT Fullname, $ht
 }
 
 # Start the VMs
-Start-VM -VMName SSRV1, SSRV2, SSRV3 
+Write-Verbose 'Restarting the SSRV VMs'
+Start-VM -VMName SSRV1, SSRV2, SSRV3
+
+'ready to continue'
+Pause
 
 
 # Create a configuration script block to configure each VM
@@ -98,7 +105,7 @@ $vbo = $VerbosePreference #on the remote server
 $VerbosePreference = 'Continue'
 
 # Start updating help
-Write-Vervose "Starting update to help on $(Hostname)" 
+Write-Verbose "Starting update to help on $(Hostname)" 
 $HelpJob = Start-Job -ScriptBlock{Update-Help -Force}
 
 # Define registry path for autologon, then set admin logon

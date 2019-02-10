@@ -25,7 +25,7 @@ Function New-RKVM {
     Param ( 
         $Name = "DC1",
         $VmPath = "d:\v6",
-        $ReferenceVHD = "C:\v6\Ref2019.vhdx",
+        $ReferenceVHD = "D:\v6\Ref2019RTM.vhdx",
         $Network = "Internal",
         [int64] $VMMemory = 1024mb,
         $UnattendXML = "C:\v6\unattend.xml",
@@ -136,11 +136,11 @@ Function New-RKVM {
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS     #
 
 # Location of Server 2012 DVD Iso Image
-$Iso   = 'D:\builds\Windows_InsiderPreview_Server_vNext_en-us_17733.iso'
+$Iso   = 'D:\builds\en_windows_server_2019_x64_dvd_4cb967d8.iso'
 
 # Where we put the reference VHDX
 # Be careful here - make sure this is the file you just created in Create-ReferenceVHDX
-$Ref   = 'D:\v6\Ref2019.vhdx'
+$Ref   = 'D:\v6\Ref2019RTM.vhdx'
 
 # Path were VMs, VHDXs and unattend.txt files live
 $Path  = 'D:\v6'

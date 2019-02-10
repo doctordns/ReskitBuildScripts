@@ -5,7 +5,7 @@ Suitably updated - this is nearly a hosts file for the HV host.
 
 ## Core Servers
 
-``` powershell
+```powershell
 # Domain Controllers
 10.10.10.10      DC1.Reskit.Org  
 10.10.10.11      DC2.Reskit.Org  
@@ -37,8 +37,9 @@ Suitably updated - this is nearly a hosts file for the HV host.
 ```
 
 ## DHCP range
-
+```powershell
 10.10.10.150 - 10.10.10.199
+```
 
 ## Hyper-V nodes
 
@@ -51,7 +52,10 @@ Suitably updated - this is nearly a hosts file for the HV host.
 ```
 
 # Container Host
+```powershell
 10.10.10.221      CH1.Reskit.Org
+10.10.10.224/29 - (225-230)
+```
 
 ## Windows Systems Update Services (WSUS)
 
