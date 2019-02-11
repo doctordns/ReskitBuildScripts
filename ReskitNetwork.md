@@ -39,6 +39,7 @@ Suitably updated - this is nearly a hosts file for the HV host.
 ## DHCP range
 ```powershell
 10.10.10.150 - 10.10.10.199
+10.10.10.224/29   Container DHCP range (10.10.10.225-10.10.10.230) for containers on CH1.Reskit.Org
 ```
 
 ## Hyper-V nodes
@@ -51,10 +52,10 @@ Suitably updated - this is nearly a hosts file for the HV host.
 10.10.10.202     HV2.Reskit.Org  
 ```
 
-# Container Host
+## Containers
 ```powershell
-10.10.10.221      CH1.Reskit.Org
-10.10.10.224/29 - (225-230)
+10.10.10.221      CH1.Reskit.Org   # Main Container Host
+10.10.10.224/29   Container DHCP range (10.10.10.225-10.10.10.230)        # Container IP range
 ```
 
 ## Windows Systems Update Services (WSUS)
