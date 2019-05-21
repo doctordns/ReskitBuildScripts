@@ -24,11 +24,11 @@ Function New-RKVM {
     [Cmdletbinding()]
     Param ( 
         $Name = "DC1",
-        $VmPath = "d:\v6",
-        $ReferenceVHD = "D:\v6\Ref2019RTM.vhdx",
+        $VmPath = "D:\v7",
+        $ReferenceVHD = "D:\v7\Ref2019RTM.vhdx",
         $Network = "Internal",
         [int64] $VMMemory = 1024mb,
-        $UnattendXML = "C:\v6\unattend.xml",
+        $UnattendXML = "C:\v7\unattend.xml",
         $IPAddr = '10.10.10.10/24',
         $DnsSvr = '10.10.10.10'
     )
@@ -179,7 +179,7 @@ $Start = Get-Date
 #
 #  FOR GENERAL USE
 #    Create DC1 as NON-domain joined
-# New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
+ New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
 #    Configure DC1 using relevant scripts THEN create DC2
 # New-RKVM -name "DC2"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 1gb
 #

@@ -11,45 +11,45 @@
 # Version 1.2 Updated for Server 2016
 # Version 1.3 - Updated for Server 2019 and rename file and function.
 #             - Iso updated to 17733
-
+# Version 7.0.0.1 - Updating for Wiley book
+#                 - Updating the Reference ISO to base on 1903
 
 # Define a function to create a reference VHDX. 
-
 Function New-ReferenceVHDX {
 
-[Cmdletbinding()]
-Param (
-#     ISO of OS
-      [string] $Iso = $(Throw 'No ISO specified'),
+  [Cmdletbinding()]
+  Param (
+    #     ISO of OS
+    [string] $Iso = $(Throw 'No ISO specified'),
 
-#     Path to reference VHD
-      [string] $RefVHDXPath = $(Throw 'No Reference disk specified')
-)
+    #     Path to reference VHD
+    [string] $RefVHDXPath = $(Throw 'No Reference disk specified')
+  )
 
-# Get start time
-$StartTime = Get-Date
-Write-Verbose "Beginning at $StartTime"
+  # Get start time
+  $StartTime = Get-Date
+  Write-Verbose "Beginning at $StartTime"
 
-# First do some error checking
-If   (Test-Path $iso) {Write-Verbose "ISO Path [$iso] exists"}
-Else {Write-Verbose "ISO Path missing - quitting";Return}
+  # First do some error checking
+  If (Test-Path $iso) { Write-Verbose "ISO Path [$iso] exists" }
+  Else { Write-Verbose "ISO Path missing - quitting"; Return }
 
-# Import the DISM module
-Write-Verbose 'Loading DISM module' -Verbose:$false
-Import-Module -Name DISM -Verbose:$False
+  # Import the DISM module
+  Write-Verbose 'Loading DISM module' -Verbose:$false
+  Import-Module -Name DISM -Verbose:$False
 
-# Mount the OS ISO image onto the local machine
-Write-Verbose "Mounting ISO image [$iso]"
-Mount-DiskImage -ImagePath $iso 
+  # Mount the OS ISO image onto the local machine
+  Write-Verbose "Mounting ISO image [$iso]"
+  Mount-DiskImage -ImagePath $iso 
 
-# Get the Volume the Image is mounted to
-Write-Verbose 'Getting disk image of the ISO'
-$ISOImage = Get-DiskImage -ImagePath $ISO | Get-Volume
+  # Get the Volume the Image is mounted to
+  Write-Verbose 'Getting disk image of the ISO'
+  $ISOImage = Get-DiskImage -ImagePath $ISO | Get-Volume
 Write-Verbose "Got disk image [$($ISOImage.DriveLetter)]"
 
 # Get the drive Letter of the drive where the image is mounted
 # Add the drive letter separator (:)
-$ISODrive = [string]$ISOImage.DriveLetter+":"
+$ISODrive = [string]$ISOImage.DriveLetter + ":"
 Write-Verbose "OS ISO mounted on drive letter [$ISODrive]"
 
 # Next we will get the installation versions from the install.wim.
@@ -82,10 +82,10 @@ Write-Verbose "Reference image is on disk number [$VhddiskNumber]"
 # This block may throw a dialog box which you can just cancel!
 Initialize-Disk -Number $VHDDiskNumber -PartitionStyle MBR
 $VHDDrive = New-Partition -DiskNumber $VHDDiskNumber `
-           -AssignDriveLetter -UseMaximumSize  -IsActive |
-                Format-Volume -Confirm:$false
+  -AssignDriveLetter -UseMaximumSize  -IsActive |
+  Format-Volume -Confirm:$false
 
-$VHDVolume = [string]$VHDDrive.DriveLetter+":"
+$VHDVolume = [string]$VHDDrive.DriveLetter + ":"
 Write-Verbose "VHD drive [$vhddrive], Vhd volume [$vhdvolume]"
 
 # Execute DISM to apply image to reference disk
@@ -108,7 +108,7 @@ Write-Verbose "Created Reference Disk [$RefVHDXPath]"
 Get-ChildItem $RefVHDXPath
 
 $FinishTime = Get-Date
-$TT= $FinishTime - $StartTime
+$TT = $FinishTime - $StartTime
 Write-Verbose  "Finishing at $FinishTime"
 Write-verbose  "Creating base image took [$($TT.totalminutes.tostring('n2'))] minutes"
 }  # End of Create-ReferenceVHDX
@@ -116,21 +116,22 @@ Write-verbose  "Creating base image took [$($TT.totalminutes.tostring('n2'))] mi
 ################################################################################################################
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS              #
 
-#    Path to Server 2016 DVD                                                                                      
- $ISO          = 'd:\BUILDS\en_windows_server_2019_x64_dvd_4cb967d8.iso'
+#    Path to Server 2019 DVD                                                                                      
+$ISO = 'D:\BUILDS\en_windows_server_1903_x64_dvd'
 
 #    PathTo the reference VDHX is to go     
- $RefVhdxPath  = 'D:\v6\Ref2019RTM.vhdx'
+$RefVhdxPath = 'D:\V7\Ref20191905RTM.vhdx'
 
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS               #
 #################################################################################################################
 # But just to be safe:
 "Checking prereqs"
-If (! (Test-Path $iso)) {"Product ISO [$iso] not found"; return} 
-Else {"Product ISO is found!"}
+If (! (Test-Path $iso)) { "Product ISO [$iso] not found"; return } 
+Else { "Product ISO is found!" }
 
-if (Test-path $RefVhdxPath) {"Reference disk already exists"; return} Else {
-"Reference disk not found - to be created now"}
+if (Test-path $RefVhdxPath) { "Reference disk already exists"; return } Else {
+  "Reference disk not found - to be created now"
+}
 
 # Ok now do the creation of the reference Hard Disk
 
