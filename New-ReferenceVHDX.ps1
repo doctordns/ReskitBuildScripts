@@ -1,4 +1,7 @@
-﻿# Create-ReferenceVHDX.ps1
+﻿[Cmdletbinding()]
+Param()
+
+# Create-ReferenceVHDX.ps1
 # Script that creates a reference VHDX for later VM Creation
 # Version 1.0.0 - 14 Jan 2013
 #   First version released
@@ -117,7 +120,7 @@ Write-verbose  "Creating base image took [$($TT.totalminutes.tostring('n2'))] mi
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS              #
 
 #    Path to Server 2019 DVD                                                                                      
-$ISO = 'D:\BUILDS\en_windows_server_1903_x64_dvd'
+$ISO = 'D:\BUILDS\en_windows_server_1903_x64_dvd.iso'
 
 #    PathTo the reference VDHX is to go     
 $RefVhdxPath = 'D:\V7\Ref20191905RTM.vhdx'
