@@ -2,6 +2,7 @@
 Param()
 
 # Create-ReferenceVHDX.ps1
+
 # Script that creates a reference VHDX for later VM Creation
 # Version 1.0.0 - 14 Jan 2013
 #   First version released
@@ -16,6 +17,9 @@ Param()
 #             - Iso updated to 17733
 # Version 7.0.0.1 - Updating for Wiley book
 #                 - Updating the Reference ISO to base on 1903
+#                 - Added cmdletbinding to get -Verbose at script level
+# Note: Does not run in pwsh 6.3 since no out-gridview. MUST test this with early builds of pwsh 7
+
 
 # Define a function to create a reference VHDX. 
 Function New-ReferenceVHDX {
