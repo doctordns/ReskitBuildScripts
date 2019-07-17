@@ -12,8 +12,8 @@ Param()
 #   Also, changed time display to display seconds with just 2 decimal points.\
 # Version 1.1.1 21 Feb
 #   changed disk size on Reference disk to 128gb.
-# Version 1.2 Updated for Server 2016
-# Version 1.3 - Updated for Server 2019 and rename file and function.
+# Version 5.0 -  Updated for Server 2016
+# Version 6.0 - Updated for Server 2019 and rename file and function.
 #             - Iso updated to 17733
 # Version 7.0.0.1 - Updating for Wiley book
 #                 - Updating the Reference ISO to base on 1903
@@ -124,7 +124,7 @@ Write-verbose  "Creating base image took [$($TT.totalminutes.tostring('n2'))] mi
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS              #
 
 #    Path to Server 2019 DVD                                                                                      
-$ISO = 'D:\BUILDS\en_windows_server_1903_x64_dvd.iso'
+$ISO = 'D:\BUILDS\en_windows_server_2019_1903_x64_dvd.iso'
 
 #    PathTo the reference VDHX is to go     
 $RefVhdxPath = 'D:\V7\Ref20191905RTM.vhdx'
