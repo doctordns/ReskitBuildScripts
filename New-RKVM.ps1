@@ -191,10 +191,11 @@ $Start = Get-Date
 
 
 #  FOR POWERSHELL COOKBOOK USE
-# Create DC1 and DC2 as NON-domain joined and allow book recipes to configure
+# Create DC1 as non domain joined and allow book recipes to configure, then conviture 2x as dg
 # Since both are workgroup systems, run at same time, then configure with book recipes
- New-RKVM -name 'DC1x'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
-# New-RKVM -name 'DC2'  -vmPath $path -ReferenceVHD $ref -network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
+# New-RKVM -name 'DC1x'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
+# New-RKVM -name 'DC2'  -vmPath $path -ReferenceVHD $ref -network 'Internal' -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
+New-RKVM -name 'DC2x'  -vmPath $path -ReferenceVHD $ref -network 'Internal' -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
 
 #
 #    Remaining VMs use the domain-join version of unattend.xml
