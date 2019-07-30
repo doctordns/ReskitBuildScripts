@@ -52,11 +52,16 @@ Suitably updated - this is nearly a hosts file for the HV host.
 10.10.10.202     HV2.Reskit.Org  
 ```
 
-## Containers
+## Container Host
 ```powershell
 10.10.10.221      CH1.Reskit.Org   # Main Container Host
 10.10.10.224/29   Container DHCP range (10.10.10.225-10.10.10.230)        # Container IP range
 ```
+
+## Kapoho.Com Forest
+```powershell
+10.10.10.131     KAPDC1.Kapoho.Org
+
 
 ## Windows Systems Update Services (WSUS)
 
