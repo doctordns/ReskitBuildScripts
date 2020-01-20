@@ -136,18 +136,18 @@ Write-Verbose ("Creating VM ($name) took {0} seconds" -f ($FinishTime - $Startti
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS     #
 
 # Location of Server 2012 DVD Iso Image
-$Iso = 'D:\builds\en_windows_server_2019_x64_dvd_4cb967d8.iso'
+$Iso = 'D:\BUILDS\en_windows_server_2019_updated_nov_2019_x64_dvd_56432a3e.iso'
 
 # Where we put the reference VHDX
 # Be careful here - make sure this is the file you just created in Create-ReferenceVHDX
-$Ref = 'D:\v7\Ref20191905RTM.vhdx'
+$Ref = 'D:\v7\Ref2019.vhdx'
 
 # Path were VMs, VHDXs and unattend.txt files live
 $Path = 'D:\v7'
 
 # Location of Unattend.xml - first for workstation systems, second for domain joined systems 
-$Una = 'D:\v7\UnAttend.xml'
-$Unadj = 'D:\v7\UnAttend.dj.xml'
+$Una   = 'D:\v7\UnAttend.xml'     # workgroup memeber
+$Unadj = 'D:\v7\UnAttend.dj.xml'  # joined to reskit.org
 
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS     #
 #######################################################################################################
@@ -179,23 +179,26 @@ $Start = Get-Date
 #  FOR GENERAL USE
 #    Create DC1 as NON-domain joined
 # New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 4gb 
+# New-RKVM -name 'DC1x' -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 4gb 
+
 #    Configure DC1 using relevant scripts THEN create DC2
-# New-RKVM -name "DC2"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 5gb
+#  New-RKVM -name "DC2"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 5gb
 #
-#  For new book - DC1.UK.Cookham.Net
-# New-RKVM -name "UKDC1"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.12  -VMMemory 1gb
-#  For new book - DC1.Kapoho.Com
-# New-RKVM -name "KAPDC1"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.13  -VMMemory 1gb
+#  For new book - DC1.UK.Cookham.ORG (uk.cookham.Org network
+# New-RKVM -name 'UKDC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.12/24' -DNSSvr 10.10.10.10  -VMMemory 4gb
+
+#  For new book - KAPDC1.Kapoho.Com - DC/DNS in Kapoho.com domain
+# New-RKVM -name "KAPDC1"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.131/24' -DNSSvr 10.10.10.131  -VMMemory 1gb
 
 #
 
 
-#  FOR POWERSHELL COOKBOOK USE
+#  FOR POWERSHELL BOOK USE
 # Create DC1 as non domain joined and allow book recipes to configure, then conviture 2x as dg
 # Since both are workgroup systems, run at same time, then configure with book recipes
-# New-RKVM -name 'DC1x'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
+# New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
 # New-RKVM -name 'DC2'  -vmPath $path -ReferenceVHD $ref -network 'Internal' -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
-New-RKVM -name 'DC2x'  -vmPath $path -ReferenceVHD $ref -network 'Internal' -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
+
 
 #
 #    Remaining VMs use the domain-join version of unattend.xml
@@ -234,7 +237,7 @@ New-RKVM -name 'DC2x'  -vmPath $path -ReferenceVHD $ref -network 'Internal' -Una
 # New-RKVM -name "WSUS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.251/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
 
 #    Container Host
-# New-RKVM -name "CH1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.221/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
+# New-RKVM -name "CH1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.221/24' -DNSSvr 10.10.10.10 -VMMemory 4gb
 
 #   SQL 2016
 # New-RKVM -name "SQL2016" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.221/24' -DNSSvr 10.10.10.10 -VMMemory 4gb
