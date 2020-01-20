@@ -2,10 +2,10 @@
 
 ## Introduction
 
-This repo holds the build scripts for the Reskit.org domain.
+This repository holds the build scripts for the Reskit.org domain.
 I use this domain and the VMs in my books, speaking, and training.
 These scripts are not a fully baked automation solution but allows you to create just the VMs you need
-In my advanced class, I also get the students to run these scripts during class as a learning exercise.
+In advanced PowerShell class, students run and then dissect these scripts
 
 These scripts work for me, in my environment and on my systems.
 I make no promises other than they should work if you are careful.
@@ -18,44 +18,64 @@ If you find issues, please file an issue on GitHub.
 
 The scripts create a set of Hyper-V Vms that might make up a corporate data centre.
 These VMs are based on a difference disk for all servers.
-At present Reskit.Org client systems are manually installed
 That includes DCs, DNS/DHCP services, and a variety of other servers.
-The scripts first create the differencing disk, and then create a Domain Controller and a few core servers.
+You first create a base differencing disk, and then create a Domain Controller and go from there
 Other servers are created but are configure solely by a recipe or set of recipes.
+At present You manually install any Reskit.Org client system and join it to the domain.
+
+There are two broad ways to use these scripts. 
+First, you can build the differencing disk, create DC1 VM. You can then make that a DC in the Reskit domain, and create the other VMs as and when needed.  There are scripts to build the DC, with DHCP/DNS, a SQL server and a couple of general puprpose servers hosting other roles. 
+This is good for the classroom where we want the DC up and running, etc. You can run just those scripts you need to in order to build from scratch a full domain as the basis for teaching or lecturing.
+Second, use the scripts here to create the VMs, but use the scripts in my PowerShell books to configure your many VMs. I hope the scripts enable you to build your basic VMs and go from there.
+Of course, you can do both!
 
 ## Building the Reskit.Org VM Farm
 
 This is a pretty straightforward process.
 Please take a moment to read the rest of this document before diving in to create VMs!
+This process is based on using Hyper-V differencing disks to save disk space on the VM host.
 
 ### Setup Your Working Environment
 
 Create your VM host. Ypu want either Server 2019 or WIndows 10 Enterprise/Pro.
 Ensure the host has Hyper-V feature added.
-On your VM host, create a **D:\V6** as the location for the VMs.
-Then copy the two unattended XML files **\unattended XML\Unattend.xml* and **\unattended XML\UnAttend.DJ.xml** into **D:\v6** on the VM host.
-Finally, you need to obtain the ISO image for Server 2019 (left as an exercise for the reader)
+On your VM host, create a **D:\V7** as the location for the VMs.
+You can change this folder - but you need to upate the variables used to hold this folder name. 
+Then copy the two unattended XML files **\unattended XML\Unattend.xml* and **\unattended XML\UnAttend.DJ.xml** into **D:\v7** on the VM host.
+These XML files are used to build a Wondows Server somewhat pre-configured (eg with credentials, machine name, IP address, etc all pre-assigned).
+All the values (domain name, administrator password) are easy to change. 
+Finally, you need to obtain the ISO image for Windows Server 2019 (left as an exercise for the reader)
 
 ### Create a Reference Disk
 
 The first step is for you to use **New-ReferenceVHDX.ps1** to create a reference VHDx.
 As mentioned, the VMs in Reskit.Org farm are based on using a single reference VHDx to save disk space.
-This script requires the ISO image of WIndows Server 2019 DataCentre and outputs the reference VHDX that is used in all the following recipes.
+This script requires the ISO image of Windows Server 2019 DataCentre and outputs the reference VHDX that is used in all the following recipes.
+Some ISO images you get contain multiple configurations (Standard, Data Center) depending on the source.
+The created VHDX is essentially a copy of Windows server copied from the ISO image.
 
-Before running this script, ensure paths are correct to the ISO and output vhdx.
-If this is the first time you've run these scripts, you may want to to test the reference disk more completely.
+Before running this script, ensure paths are correct and point the ISO image and where you want to store the reference disk.
+If this is the first time you've run these scripts, you can to to test the reference disk more completely.
 To do that, copy the file and create a VM using that copy.
+When you start the VM, Windows runs the setup process using the values in the unattended XML file.
 If the installation of Windows Server 2019 on that copied VHDx is successful, you should be good to move forward (and you can delete the copied file and the test virtual machine)
 
 ### Create DC1 VM
 
 Use **New-RKVM.ps1** to create the first VM.
-This script contains, at the top, a function that creates a VM which is then followed by calls to that function.
-The script you download from GitHub _should_ have all the calls to the function commented out.
+This is a generic script that you use to create all the Riskit VMs.
+At the top of the script you can see a function that creates a VM. 
+Then you see a number of invocations of that function which individually create the relevant domain joined or non-domian joined servers.
+
+If you you download this script from GitHub you _should_ see all the calls to the function commented out.
 Since this repo is a work in progress, you may find that some calls are NOT commented out.
-So before running the script for the first time make sure all calls are commented out.
-This enables the function to compile and results in no VMs being created.
+So before running the script for the first time make sure **all** calls o NEW-VM are commented out.
+If you run it this way, you can see that the function compiles OK, even with no VMs actually created.
 Once this works, you can un-comment the call to create DC1 and run the script again to create DC1 VM.
+
+Each VM you create spins up and goes through the installation process. 
+At the end of the process, 
+ 
 
 ### Configure DC1 (and your host!)
 
