@@ -60,10 +60,10 @@ Function New-RKVM {
   # Mount the Disk on the local machine
   Mount-DiskImage -ImagePath $path
   $VHDDisk = Get-DiskImage -ImagePath $path | Get-Disk
-$VHDPart = Get-Partition -DiskNumber $VHDDisk.Number
-$VHDVolumeName = [string]$VHDPart.DriveLetter
-$VHDVolume = [string]$VHDPart.DriveLetter + ":"
-Write-verbose "Volume [$VHDVolumename] created in VM [$name]"
+  $VHDPart = Get-Partition -DiskNumber $VHDDisk.Number
+  $VHDVolumeName = [string]$VHDPart.DriveLetter
+  $VHDVolume = [string]$VHDPart.DriveLetter + ":"
+  Write-verbose "Volume [$VHDVolumename] created in VM [$name]"
 
 #    Get Unattended.XML file
 Write-Verbose "Using Unattended XML file [$unattendXML]"
@@ -182,10 +182,12 @@ $Start = Get-Date
 # New-RKVM -name 'DC1x' -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 4gb 
 
 #    Configure DC1 using relevant scripts THEN create DC2
-#  New-RKVM -name "DC2"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 5gb
+#  New-RKVM -name "DC2"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 4gb
+#  New-RKVM -name "DC2x"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 4gb
 #
 #  For new book - DC1.UK.Cookham.ORG (uk.cookham.Org network
 # New-RKVM -name 'UKDC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.12/24' -DNSSvr 10.10.10.10  -VMMemory 4gb
+New-RKVM -name 'UKDC1x'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.12/24' -DNSSvr 10.10.10.10  -VMMemory 4gb
 
 #  For new book - KAPDC1.Kapoho.Com - DC/DNS in Kapoho.com domain
 # New-RKVM -name "KAPDC1"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.131/24' -DNSSvr 10.10.10.131  -VMMemory 1gb
@@ -198,6 +200,9 @@ $Start = Get-Date
 # Since both are workgroup systems, run at same time, then configure with book recipes
 # New-RKVM -name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
 # New-RKVM -name 'DC2'  -vmPath $path -ReferenceVHD $ref -network 'Internal' -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
+
+# testing
+# New-RKVM -name 'DC1X'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
 
 
 #
@@ -223,8 +228,8 @@ $Start = Get-Date
 # New-RKVM -name "SSRV3" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.113/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
 
 #    HV1, HV2 - Hyper-V Servers
-# New-RKVM -name "HV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.201/24' -DNSSvr 10.10.10.10 -VMMemory 768mb
-# New-RKVM -name "HV2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.202/24' -DNSSvr 10.10.10.10 -VMMemory 2gb
+# New-RKVM -name "HV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.201/24' -DNSSvr 10.10.10.10 -VMMemory 4GB
+# New-RKVM -name "HV2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.202/24' -DNSSvr 10.10.10.10 -VMMemory 4GB
 
 #    NLB servers
 # New-RKVM -name "NLB1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.53/24' -DNSSvr 10.10.10.10  -VMMemory 2GB

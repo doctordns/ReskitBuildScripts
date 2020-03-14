@@ -48,8 +48,8 @@ Suitably updated - this is nearly a hosts file for the HV host.
 # Hyper-V Cluster address
 10.10.10.200     HV.Reskit.Org
 # Individual Hyper-V nodes
-10.10.10.201     HV1.Reskit.Org  
-10.10.10.202     HV2.Reskit.Org  
+10.10.10.201     HV1.Reskit.Org       # 10.10.1.201
+10.10.10.202     HV2.Reskit.Org       # 10 10 1.202
 ```
 
 ## Container Host
