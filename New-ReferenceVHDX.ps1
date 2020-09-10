@@ -19,6 +19,8 @@ Param()
 #                 - Updating the Reference ISO to base on 1903
 #                 - Added cmdletbinding to get -Verbose at script level
 # Note: Does not run in pwsh 6.3 since no out-gridview. MUST test this with early builds of pwsh 7
+# Version 7.0 - new for Packt 7.0 book - removed differencing disk. Reference disk now just a master copy
+#             - Also used latest Win 2019 Server (aug 2020)
 
 
 # Define a function to create a reference VHDX. 
@@ -124,10 +126,10 @@ Write-verbose  "Creating base image took [$($TT.totalminutes.tostring('n2'))] mi
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS              #
 
 #    Path to Server 2019 DVD                                                                                      
-$ISO = 'D:\BUILDS\en_windows_server_2019_updated_nov_2019_x64_dvd_56432a3e.iso'
+$ISO = 'd:\builds\Windows_InsiderPreview_Server_vNext_en-us_20206.iso'
 
 #    PathTo the reference VDHX is to go     
-$RefVhdxPath = 'D:\V7\Ref2019.vhdx'
+$RefVhdxPath = 'D:\V8\Ref2020.vhdx'
 
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS               #
 #################################################################################################################
