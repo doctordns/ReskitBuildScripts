@@ -139,7 +139,7 @@ Write-Verbose ("Creating VM ($name) took {0} seconds" -f ($FinishTime - $Startti
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS     #
 
 # Location of Server 2012 DVD Iso Image
-$Iso = 'd:\builds\Windows_InsiderPreview_Server_vNext_en-us_20206.iso'
+$Iso = 'd:\builds\Windows_InsiderPreview_Server_vNext_en-us_20215.iso'
 
 # Where we put the reference VHDX
 # Be careful here - make sure this is the file you just created in Create-ReferenceVHDX
