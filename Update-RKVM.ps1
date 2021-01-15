@@ -1,5 +1,5 @@
 ﻿# Update-RKVM.ps1
-# Updates an RK VM
+# Updates an RK VM - new nics, etc
 
 Function Update-RKVM {
 
@@ -7,8 +7,8 @@ Function Update-RKVM {
 Param(
   $VMName,
   $CPUCount = 4,
-  $Memory   = 4GB,   # MEMORY IN gb
-  $NHV      = $False
+  $Memory   = 4GB,   # Memory in gb
+  $NHV      = $False # Nested VIrtualisation
 )
 
 # Start of script
@@ -46,7 +46,6 @@ Set-VMProcessor -VMName $VMName -ExposeVirtualizationExtensions $NHV
 Write-Verbose "VM $VMName to enable nested HyperV: [$NHV]"
 
 # Add a second NIC and bind to External.
-
 $NICs = Get-VMNetworkAdapter -VMName $VMName
 if ($Nics.Count -eq 1) {
   Write-Verbose 'Adding 2nd NIC and binding to External'  
@@ -62,4 +61,7 @@ Start-VM -VMname $VMName
 Write-Verbose "VM $VMName restarted"
 }
 
-Update-RKVM -VMName SRV1 -NHV $true -verbose -CPUCount 6
+
+# Example use:
+
+# Update-RKVM -VMName SRV1 -NHV $true -verbose -CPUCount 6

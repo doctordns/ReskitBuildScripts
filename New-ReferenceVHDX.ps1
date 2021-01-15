@@ -126,7 +126,7 @@ Write-verbose  "Creating base image took [$($TT.totalminutes.tostring('n2'))] mi
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS              #
 
 #    Path to Server 2019 DVD                                                                                      
-$ISO = 'd:\builds\Windows_InsiderPreview_Server_vNext_en-us_20215.iso'
+$ISO = 'D:\builds\Windows_InsiderPreview_Server_vNext_en-us_20270.iso'
 
 #    PathTo the reference VDHX is to go     
 $RefVhdxPath = 'D:\V8\Ref2020.vhdx'
