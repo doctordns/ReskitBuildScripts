@@ -1,6 +1,7 @@
 ﻿# Update-RKVM.ps1
 # Updates an RK VM - new nics, etc
 
+# run this in the Hyper-V Host
 Function Update-RKVM {
 
 [CmdletBinding()]
@@ -64,4 +65,5 @@ Write-Verbose "VM $VMName restarted"
 
 # Example use:
 
-# Update-RKVM -VMName SRV1 -NHV $true -verbose -CPUCount 6
+# 
+Update-RKVM -VMName SRV1 -NHV $true -verbose -CPUCount 6
