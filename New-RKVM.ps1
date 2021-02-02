@@ -188,6 +188,9 @@ $Start = Get-Date
 # New-RKVM -name 'SRV1'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $unadj -Verbose -IPAddr '10.10.10.50/24' -DNSSvr 10.10.10.10  -VMMemory 4GB
 # New-RKVM -name 'SRV2'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $unadj -Verbose -IPAddr '10.10.10.50/24' -DNSSvr 10.10.10.10  -VMMemory 4GB
 
+New-RKVM -name 'SRV1x'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $unadj -Verbose -IPAddr '10.10.10.50/24' -DNSSvr 10.10.10.10  -VMMemory 4GB
+
+
 #    CA Servers
 # NB: ROOTCA is NOT domain Joined
 # New-RKVM -Name "ROOTCA" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $una   -Verbose -IPAddr '10.10.10.20/24' -DNSSvr 10.10.10.10  -VMMemory 1gb 
