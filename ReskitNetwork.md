@@ -9,6 +9,7 @@ Suitably updated - this is nearly a hosts file for the HV host.
 # Domain Controllers
 10.10.10.10      DC1.Reskit.Org  
 10.10.10.11      DC2.Reskit.Org  
+10.10.10.12      UKDC1.Reskit.Org
 
 # Certificate servers
 10.10.10.20      RootCA.Reskit.Org  
@@ -17,13 +18,14 @@ Suitably updated - this is nearly a hosts file for the HV host.
 # General Purpose servers
 10.10.10.50      SRV1.Reskit.Org  
 10.10.10.51      SRV2.Reskit.Org  
+10.10.10.55      FS.Reskit.Org
 ```
 
 ## File Servers
 
 ```powershell
 # Scale-Out Fle server Cluster address
-10.10.10.100     FS.Reskit.Org   # Cluster  address  
+10.10.10.55     FSCluster.Reskit.Org   # Cluster  address  
 
 # Individual nodes
 10.10.10.101     FS1.Reskit.Org  

@@ -1,4 +1,5 @@
-﻿# Update-RKVM.ps1
+﻿#requires –RunAsAdministrator
+# Update-RKVM.ps1
 # Updates an RK VM - new nics, etc
 
 # run this in the Hyper-V Host
@@ -21,7 +22,7 @@ If ($null -eq $VMName) {
   Return 
 }
 # Get VM
-$VM = Get-VM -VMname $VMname
+$VM = Get-VM -VMName $VMname
 Write-Verbose "VM [$VMName] found - updating"
 
 # Stop it if it's running
@@ -47,10 +48,10 @@ Set-VMProcessor -VMName $VMName -ExposeVirtualizationExtensions $NHV
 Write-Verbose "VM $VMName to enable nested HyperV: [$NHV]"
 
 # Add a second NIC and bind to External.
-$NICs = Get-VMNetworkAdapter -VMName $VMName
-if ($Nics.Count -eq 1) {
+$NICS = Get-VMNetworkAdapter -VMName $VMName
+if ($NICS.Count -eq 1) {
   Write-Verbose 'Adding 2nd NIC and binding to External'  
-  Add-VMNetworkAdapter -VMName $VMname -SwitchName External
+  Add-VMNetworkAdapter -VMName $VMName -SwitchName External
 }
 else {
   Write-Verbose "Second NIC already exists in $VMName"
@@ -58,7 +59,7 @@ else {
 
 # ALL DONE
 Write-Verbose "Starting $VMName"
-Start-VM -VMname $VMName
+Start-VM -VMName $VMName
 Write-Verbose "VM $VMName restarted"
 }
 
@@ -66,4 +67,13 @@ Write-Verbose "VM $VMName restarted"
 # Example use:
 
 # 
+# 
 Update-RKVM -VMName SRV1 -NHV $true -verbose -CPUCount 6
+# Update-RKVM -VMName SRV2 -NHV $true -verbose -CPUCount 6
+# Update-RKVM -VMName DC1 -NHV $true -verbose -CPUCount 6
+# Update-RKVM -VMName DC2 -NHV $true -verbose -CPUCount 6
+# Update-RKVM -VMName Ss1 -NHV $true -verbose -CPUCount 6
+# Update-RKVM -VMName DC2 -NHV $true -verbose -CPUCount 6
+# Update-RKVM -VMName HV1 -NHV $true -verbose -CPUCount 6
+# Update-RKVM -VMName HV2 -NHV $true -verbose -CPUCount 6
+# Update-RKVM -VMName CH1 -NHV $true -verbose -CPUCount 6

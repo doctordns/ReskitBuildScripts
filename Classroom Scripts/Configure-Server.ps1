@@ -31,8 +31,9 @@ Set-ItemProperty -Path $RegPath -Name AutoAdminLogon    -Value 1         -EA 0
 Write-Verbose -Message 'Setting Monitor poweroff to zero'
 powercfg /change monitor-timeout-ac 0
 
-# reset verbosity
-$VerbosePreference = $OVP
 
 Write-Verbose "Configured $(hostname)"
 Write-Verbose 'You can now move on to the next configuration task'
+
+# reset verbosity
+$VerbosePreference = $OVP

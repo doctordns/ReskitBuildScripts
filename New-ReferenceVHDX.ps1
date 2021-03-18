@@ -15,7 +15,7 @@ Param()
 # Version 5.0 -  Updated for Server 2016
 # Version 6.0 - Updated for Server 2019 and rename file and function.
 #             - Iso updated to 17733
-# Version 7.0.0.1 - Updating for Wiley book
+# Version 6.0.0.1 - Updating for Wiley book
 #                 - Updating the Reference ISO to base on 1903
 #                 - Added cmdletbinding to get -Verbose at script level
 # Note: Does not run in pwsh 6.3 since no out-gridview. MUST test this with early builds of pwsh 7
@@ -126,10 +126,10 @@ Write-verbose  "Creating base image took [$($TT.totalminutes.tostring('n2'))] mi
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS              #
 
 #    Path to Server 2019 DVD                                                                                      
-$ISO = 'D:\builds\Windows_InsiderPreview_Server_vNext_en-us_20270.iso'
+$ISO = 'D:\builds\Windows_InsiderPreview_Server_vNext_en-us_20303.iso'
 
 #    PathTo the reference VDHX is to go     
-$RefVhdxPath = 'D:\V8\Ref2020.vhdx'
+$RefVhdxPath = 'D:\V8\Ref2022.vhdx'
 
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS               #
 #################################################################################################################
