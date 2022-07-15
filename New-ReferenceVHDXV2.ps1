@@ -1,7 +1,7 @@
 ﻿[Cmdletbinding()]
-Param()
-
-# Create-ReferenceVHDX.ps1
+Param()  # none as such
+ 
+# Create-ReferenceVHDX.ps1 v2
 
 # Script that creates a reference VHDX for later VM Creation
 # Version 1.0.0 - 14 Jan 2013
@@ -21,7 +21,6 @@ Param()
 # Note: Does not run in pwsh 6.3 since no out-gridview. MUST test this with early builds of pwsh 7
 # Version 7.0 - new for Packt 7.0 book - removed differencing disk. Reference disk now just a master copy
 #             - Also used latest Win 2019 Server (aug 2020)
-# Version 8.0 - updated to create a GPT based VFHDX for Gen 2 VM
 
 
 # Define a function to create a reference VHDX. 
@@ -32,7 +31,10 @@ Function New-ReferenceVHDX {
     #     ISO of OS
     [string] $Iso = $(Throw 'No ISO specified'),
 
-    #     Path to reference VHD
+    # Template VHDX
+    [string] $RefBasePath = $(Throw 'No template VHDX specified'),
+
+    #     Path to reference VHD - a bootable vhdx
     [string] $RefVHDXPath = $(Throw 'No Reference disk specified')
   )
 
@@ -69,7 +71,7 @@ Write-Verbose "OS ISO mounted on drive letter [$ISODrive]"
 $IndexList = Get-WindowsImage -ImagePath $ISODrive\sources\install.wim
 Write-Verbose "$($indexList.count) images found"
 
-# don't Display the list and return the index
+# Display the list and return the index
 $item = $IndexList | Out-GridView -OutputMode Single
 $index = $item.ImageIndex
 
@@ -78,6 +80,12 @@ $index = $item.ImageIndex
 Write-Verbose "Selected image index [$index]"
 Write-Verbose "Image Name: [$($indexlist[$index].Imagename)]"
 
+pause
+#  OK - so now we have the iso mounted, and know which index.
+
+# Let's copy the Base reference disk 
+
+C
 # Create the VHDX for the reference image
 $VMDisk01 = New-VHD –Path $RefVHDXPath -SizeBytes 128GB
 Write-Verbose "Created VHDX File [$($vmdisk01.path)]"
@@ -109,12 +117,6 @@ Write-Verbose "Finished at [$(Get-Date)]"
 Write-Verbose 'Setting BCDBoot'
 BCDBoot.exe $VHDVolume\Windows /s $VHDVolume /f BIOS
 
-# Change the disk to GPT
-$Disk = Get-Disk |
-          Where-Object Manufacturer -match 'msft' 
-$DiskNum = $Disk.Number         
-MBR2GPT.EXE /Convert /Disk:$DiskNum /allowFullOs
-
 # Dismount the Images
 Write-Verbose "Dismounting ISO and new disk"
 Dismount-DiskImage -ImagePath $ISO
@@ -132,24 +134,28 @@ Write-verbose  "Creating base image took [$($TT.totalminutes.tostring('n2'))] mi
 ################################################################################################################
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS              #
 
-#    Path to Server 2019 DVD                                                                                      
-$ISO = 'D:\builds\en-us_windows_server_2022_x64_dvd_620d7eac.ISO'
+#    Path to Server 2022 DVD                                                                                      
+$ISO = 'C:\builds\en-us_windows_server_2022_x64_dvd_620d7eac.iso'
 
-#    PathTo the reference VDHX is to go     
-$RefVhdxPath = 'D:\V9\Ref2022.vhdx'
+#    Path to the reference VDHX is to go     
+$RefVhdxPath = 'C:\V9\Ref2022v2.vhdx'
+
+#    Path of base disk
+$RefBasePath = 'C:\V9\Base.vhdx'
 
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS               #
 #################################################################################################################
 # But just to be safe:
 "Checking prereqs"
 If (! (Test-Path $iso)) { "Product ISO [$iso] not found"; return } 
-Else { "Product ISO is found!" }
+Else { "Product ISO [$iso] is found!" }
 
-if (Test-path $RefVhdxPath) { "Reference disk already exists"; return } Else {
-  "Reference disk not found - to be created now"
-}
+If (! (Test-Path $RefBasePath)) { "Template VHDX [$RefBasePath] not found"; return } 
+Else { "Template VHDX [$RefBasePath] is found!" }
+
+if (Test-path $RefVhdxPath) { "Reference disk already exists"; return } 
+Else {"Reference disk not found - to be created now [$RefVhdxPath]"}
 
 # Ok now do the creation of the reference Hard Disk
 
 New-ReferenceVHDX -iso $Iso -RefVHDXPath $RefVhdxPath  -Verbose
-

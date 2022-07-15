@@ -26,11 +26,11 @@ Function New-RKVM {
   [Cmdletbinding()]
   Param ( 
     $Name             = 'DC1',
-    $VmPath           = 'D:\v8',
-    $ReferenceVHD     = 'D:\v8\Ref2020.vhdx',
+    $VmPath           = 'D:\v9',
+    $ReferenceVHD     = 'D:\v9\Ref2020.vhdx',
     $Network          = 'Internal',
     [int64] $VMMemory = 1024mb,
-    $UnattendXML      = '"C:\v8\unattend.xml',
+    $UnattendXML      = 'D:\v9\unattend.xml',
     $IPAddr           = '10.10.10.10/24',
     $DnsSvr           = '10.10.10.10'
   )
@@ -58,15 +58,26 @@ Function New-RKVM {
   Write-Verbose "Creating VM           : [$Name]"
   Write-Verbose "VHD path              : [$VHDPath]"
   Write-Verbose "VM Path               : [$Path\$Name]"
-  $VM = New-VM –Name $Name –MemoryStartupBytes $VMMemory –VHDPath $VHDPath -SwitchName $Network -Path $vmPath 
+  $NewVMHT = @{
+    Name = $Name 
+    MemoryStartupBytes = $VMMemory 
+    VHDPath            = $VHDPath 
+    SwitchName         = $Network 
+    Path               =  $VMPath 
+    Generation         =  2
+  }
+
+  $VM = New-VM @NewVMHT
+
   Write-Verbose "New VM Created        : [$($VM.Name)]"
 
   # Mount the newly created VHD on the local machine
   Mount-DiskImage -ImagePath $VHDPath
   $VHDDisk = Get-DiskImage -ImagePath $vhdpath | Get-Disk
-  $VHDPart = Get-Partition -DiskNumber $VHDDisk.Number
-  $VHDVolumeName = [string]$VHDPart.DriveLetter
-  $VHDVolume = [string]$VHDPart.DriveLetter + ":"
+  $VHDPart = Get-Partition -DiskNumber $VHDDisk.Number | Select-Object -First 1
+
+  $VHDVolumeName = ([string]$VHDPart.DriveLetter).trimend()
+  $VHDVolume = ([string]$VHDPart.DriveLetter).trim() + ":"
   Write-Verbose "Volume [$VHDVolumename] created in VM [$name]"
 
 #    Get Unattended.XML file
@@ -111,7 +122,7 @@ Write-Verbose "Unattended XML file saved to vhd [$vhdvolume\unattend.xml]"
 
 #    Dismount VHDX 
 Write-Verbose "Dismounting disk image: [$VHDPath]"
-Dismount-DiskImage -ImagePath $VHDPath | FT
+Dismount-DiskImage -ImagePath $VHDPath | Format-table
 
 #    Update additional Settings
 Write-Verbose 'Setting additional VM settings'
@@ -140,22 +151,48 @@ Write-Verbose ("Creating VM ($name) took {0} seconds" -f ($FinishTime - $Startti
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS     #
 
 # Location of Server 2012 DVD Iso Image
-$Iso = 'D:\Builds\Windows_InsiderPreview_Server_vNext_en-us_20303.iso'
+$Iso = 'd:\Builds\en-us_windows_server_2022_x64_dvd_620d7eac.iso'
 
 # Where we put the reference VHDX
 # Be careful here - make sure this is the file you just created in Create-ReferenceVHDX
-$Ref = 'D:\v8\Ref2022.vhdx'
+$Ref = 'D:\v9\Ref2022.vhdx'
 
 # Path were VMs, VHDXs and unattend.txt files live
-$Path = 'D:\V8'
+$Path = 'D:\V9'
 
 # Location of Unattend.xml - first for workstation systems, second for domain joined systems 
-$Una   = 'D:\v8\UnAttend.xml'     # workgroup memeber
-$Unadj = 'D:\v8\UnAttend.dj.xml'  # joined to reskit.org
+$Una   = 'D:\v9\UnAttend.xml'     # workgroup memeber
+$Unadj = 'D:\v9\UnAttend.dj.xml'  # joined to reskit.org
 
 #       CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS ===== CHECK THESE PATHS     #
 #######################################################################################################
+If (Test-Path $Iso) {    # testing ISO path
+  Write-Verbose "ISO Image found [$Iso]"
+}
+else {
+  Throw "Iso Image not found [$iso]"
+}
 
+If (Test-Path $REF) {     # Testing Reference Image
+  Write-Verbose "Reference Image found [$REF]"
+}
+else {
+  Throw "Reference Image not found [$REF]"
+}
+
+If (Test-Path $UNA) { # Testing unattend work group XML
+  Write-Verbose "UNA XML Found [$UNA]"
+}
+else {
+  Throw "UNA XML not found [$UNA]"
+}
+
+If (Test-Path $UNADJ) {
+  Write-Verbose "UNADJ XML found [$UNADJ]"
+}
+else {
+  Throw "UNADJ not found [$UNADJ]"
+}
 
 #   Now run the script to create the VMs as appropriate.
 $Start = Get-Date
@@ -205,11 +242,8 @@ $Start = Get-Date
 #  For Packt POWERSHELL 7.1 Book - chap 1,2,3) - not domain joined till later
 # New-RKVM -Name 'SRV1'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.50/24' -DNSSvr 10.10.10.10  -VMMemory 4GB
 
-# for testing only
-# New-RKVM -Name 'SRV1x'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.50/24' -DNSSvr 10.10.10.10  -VMMemory 4GB
-
 # Create DC1 as unjoined initially
-# New-RKVM -Name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
+#  New-RKVM -Name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
 
 # Create DC2 as domain joined after DC1 is a DC
 # New-RKVM -name 'DC2'  -vmPath $path -ReferenceVHD $ref -network 'Internal' -UnattendXML $unadj -Verbose -IPAddr '10.10.10.11/24' -DNSSvr 10.10.10.10  -VMMemory 2GB
@@ -217,8 +251,8 @@ $Start = Get-Date
 # UKDC1 - created initially in reskit.org net, then becomes a child DC
 # New-RKVM -name 'UKDC1'  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.12/24' -DNSSvr 10.10.10.10  -VMMemory 4gb
 
-# Create SRV2 as joined after DC1 is a DC
-# New-RKVM -name 'SRV2'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.51/24' -DNSSvr 10.10.10.10  -VMMemory 4GB
+# Create SRV2 as workgroup host after DC1/DC2/UKDC1 created as DCs
+ New-RKVM -name 'SRV2'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.51/24' -DNSSvr 10.10.10.10  -VMMemory 4GB
 
 # for Wiley book only
 #  And KAPDC1.Kapoho.Com - DC/DNS in Kapoho.com domain - starts as work group host
@@ -249,7 +283,7 @@ $Start = Get-Date
 # New-RKVM -name "WSUS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.251/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
 
 #    Container Host
- New-RKVM -name "CH1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.221/24' -DNSSvr 10.10.10.10 -VMMemory 4gb
+# New-RKVM -name "CH1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.221/24' -DNSSvr 10.10.10.10 -VMMemory 4gb
 
 # for testing only
 # New-RKVM -name 'DC1X'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
@@ -260,9 +294,10 @@ $Start = Get-Date
 
 
 
+
 #######################################################################################################
 #  script is all done - just say nice things and quit.
 $Finish = Get-Date
 "Create-VM.ps1 finished at : $Finish"
 "Elapsed Time              :  $(($Finish-$Start).totalseconds) seconds"
-#  end of create-vm
+#  end of New-RKVM.ps1
