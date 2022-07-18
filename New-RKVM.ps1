@@ -2,7 +2,7 @@
 
 # New-RKVM.ps1
 # Script that creates VMs
-# Version 1.0.0 - 14 Jan 2013
+# Version 1.0.0 - 14 Jan 2013d
 # Version 1.0.1 - Added VHDSize to create-vm function
 # Version 1.0.2 - Added more VMs to create (for Packt book etc)
 # Version 1.0.3 - updated for Server 2019
