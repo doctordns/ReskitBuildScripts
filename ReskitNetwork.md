@@ -18,7 +18,6 @@ Suitably updated - this is nearly a hosts file for the HV host.
 # General Purpose servers
 10.10.10.50      SRV1.Reskit.Org  
 10.10.10.51      SRV2.Reskit.Org  
-10.10.10.55      FS.Reskit.Org
 ```
 
 ## File Servers
@@ -39,9 +38,9 @@ Suitably updated - this is nearly a hosts file for the HV host.
 ```
 
 ## DHCP range
+
 ```powershell
-10.10.10.150 - 10.10.10.199
-10.10.10.224/29   Container DHCP range (10.10.10.225-10.10.10.230) for containers on CH1.Reskit.Org
+10.10.10.150-199  DHCP Server is installed in the Networking Chapter and uses this range
 ```
 
 ## Hyper-V nodes
@@ -55,15 +54,17 @@ Suitably updated - this is nearly a hosts file for the HV host.
 ```
 
 ## Container Host
+
 ```powershell
 10.10.10.221      CH1.Reskit.Org   # Main Container Host
 10.10.10.224/29   Container DHCP range (10.10.10.225-10.10.10.230)        # Container IP range
 ```
 
 ## Kapoho.Com Forest
+
 ```powershell
 10.10.10.131     KAPDC1.Kapoho.Org
-
+```
 
 ## Windows Systems Update Services (WSUS)
 

@@ -1,3 +1,8 @@
 {
-    "powershell.codeFormatting.addWhitespaceAroundPipe": true
+    "powershell.codeFormatting.addWhitespaceAroundPipe": true,
+    "cSpell.words": [
+        "Kapoho",
+        "Reskit",
+        "UKDC"
+    ]
 }
