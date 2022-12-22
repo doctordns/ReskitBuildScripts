@@ -65,15 +65,16 @@ Write-Verbose "VM $VMName restarted"
 
 
 # Example use:
-# Update-RKVM -VMName SRV1   -NHV $true -verbose -CPUCount 6
+ Update-RKVM -VMName SRV1   -NHV $true -verbose -CPUCount 6
 # Update-RKVM -VMName SRV2   -NHV $true -verbose -CPUCount 6 -memory 8GB
 # Update-RKVM -VMName DC1    -NHV $true -verbose -CPUCount 6 -memory 8GB
 # Update-RKVM -VMName DC2    -NHV $true -verbose -CPUCount 6 -memory 8GB
 # Update-RKVM -VMName UKDC1  -NHV $true -verbose -CPUCount 6 -memory 8GB
- Update-RKVM -VMName HV1    -NHV $true -verbose -CPUCount 6
- Update-RKVM -VMName HV2    -NHV $true -verbose -CPUCount 6
- Update-RKVM -VMName CH1    -NHV $true -verbose -CPUCount 6
- Update-RKVM -VMName PSRV   -NHV $true -verbose -CPUCount 6
+# Update-RKVM -VMName HV1    -NHV $true -verbose -CPUCount 6
+# Update-RKVM -VMName HV2    -NHV $true -verbose -CPUCount 6
+# Update-RKVM -VMName CH1    -NHV $true -verbose -CPUCount 6
+# Update-RKVM -VMName PSRV   -NHV $true -verbose -CPUCount 6
 # Update-RKVM -VMName FS2    -NHV $true -verbose -CPUCount 4
 # Update-RKVM -VMName FS1    -NHV $true -verbose -CPUCount 4
 # Update-RKVM -VMName SS1    -NHV $true -verbose -CPUCount 4
+# Update-RKVM -VMName WSUS1  -NHV $true -verbose -CPUCount 4 -memory 8GB

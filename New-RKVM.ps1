@@ -240,7 +240,7 @@ $Start = Get-Date
 
 # 
 #  For Packt POWERSHELL 7.1 Book - chap 1,2,3) - not domain joined till later
-# New-RKVM -Name 'SRV1'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.50/24' -DNSSvr 10.10.10.10  -VMMemory 4GB
+# New-RKVM -Name 'SRV1'  -VmPath $Path -ReferenceVHD $Ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.50/24' -DNSSvr 10.10.10.10  -VMMemory 4GB
 
 # Create DC1 as unjoined initially
 #  New-RKVM -Name 'DC1'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
@@ -258,7 +258,6 @@ $Start = Get-Date
 #  And KAPDC1.Kapoho.Com - DC/DNS in Kapoho.com domain - starts as work group host
 # New-RKVM -name "KAPDC1"  -vmPath $path -ReferenceVHD $ref -network "Internal" -UnattendXML $una -Verbose -IPAddr '10.10.10.131/24' -DNSSvr 10.10.10.131  -VMMemory 1gb
 
-
 #    FS1, FS1 - file servers for which to cluster
 # New-RKVM -name "FS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.101/24' -DNSSvr 10.10.10.10 -VMMemory 4gb
 # New-RKVM -name "FS2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.102/24' -DNSSvr 10.10.10.10 -VMMemory 4gb
@@ -271,21 +270,21 @@ $Start = Get-Date
 
 
 #    HV1, HV2 - Hyper-V Servers
- New-RKVM -name "HV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.201/24' -DNSSvr 10.10.10.10 -VMMemory 4GB
- New-RKVM -name "HV2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.202/24' -DNSSvr 10.10.10.10 -VMMemory 4GB
+# New-RKVM -name "HV1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.201/24' -DNSSvr 10.10.10.10 -VMMemory 4GB
+# New-RKVM -name "HV2" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.202/24' -DNSSvr 10.10.10.10 -VMMemory 4GB
 
 #    NLB servers - Windows PowerShell only
 # New-RKVM -name "NLB1"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.53/24' -DNSSvr 10.10.10.10  -VMMemory 4GB
 # New-RKVM -name "NLB2"  -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.54/24' -DNSSvr 10.10.10.10  -VMMemory 4GB
 
 #    Print Server
- New-RKVM -name "PSRV" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.60/24' -DNSSvr 10.10.10.10 -VMMemory 4gb
+# New-RKVM -name "PSRV" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.60/24' -DNSSvr 10.10.10.10 -VMMemory 4gb
 
 #    WSUS Server - Windows PowerShell only
-# New-RKVM -name "WSUS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.251/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
+New-RKVM -name "WSUS1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.251/24' -DNSSvr 10.10.10.10 -VMMemory 1gb
 
 #    Container Host
- New-RKVM -name "CH1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.221/24' -DNSSvr 10.10.10.10 -VMMemory 4gb
+# New-RKVM -name "CH1" -VmPath $path -ReferenceVHD $ref -Network "Internal" -UnattendXML $unadj -Verbose -IPAddr '10.10.10.221/24' -DNSSvr 10.10.10.10 -VMMemory 4gb
 
 # for testing only
 # New-RKVM -name 'DC1X'  -VmPath $path -ReferenceVHD $ref -Network 'Internal' -UnattendXML $una -Verbose -IPAddr '10.10.10.10/24' -DNSSvr 10.10.10.10  -VMMemory 2gb 
